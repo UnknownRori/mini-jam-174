@@ -10,10 +10,10 @@
 #include "./utils.h"
 
 #define ASTEROID_LIMIT 100
-#define ASTEROID_LIFETIME 120
+#define ASTEROID_LIFETIME 20
 
 #define SCRAP_LIMIT 512
-#define SCRAP_LIFETIME 120
+#define SCRAP_LIFETIME 10
 
 #define PARALAX_LIMIT 1
 #define PARALAX_MIN -2
@@ -48,7 +48,9 @@ typedef struct {
 typedef struct {
     Vector2 position;
     u32 value;
+
     bool active;
+    Timer timer;
 } Scrap;
 
 typedef struct
@@ -62,15 +64,16 @@ typedef struct {
     Asteroid asteroid[ASTEROID_LIMIT];
     Scrap scrap[SCRAP_LIMIT];
 
+    u64 highscore;
+    u64 score;
+    u64 scrap_collected;
+    u64 scrap_spent;
     Paralax paralax[PARALAX_LIMIT];
 
     Camera2D camera;
 } Game;
 
 typedef struct {
-    u64 highscore;
-    u64 score;
-
     f32 sfxVolume;
     f32 bgmVolume;
 } Config;

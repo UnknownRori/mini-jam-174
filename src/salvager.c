@@ -9,6 +9,7 @@
 #include "./include/salvager_internal.h"
 #include "./include/types.h"
 #include "./include/utils.h"
+#include "include/timer.h"
 
 Game g = {0};
 Assets a = {0};
@@ -30,6 +31,16 @@ void ScrapDraw(void)
             .y = SCRAP_SPRITE.width / 2.,
         };
         DrawTexturePro(a.spriteAtlas, SCRAP_SPRITE, dst, origin, 0, WHITE);
+    }
+}
+
+void ScrapUpdate(void)
+{
+    for (u32 i = 0; i < SCRAP_LIMIT; i++)
+    {
+        if (!g.scrap[i].active) continue;
+        TimerUpdate(&g.scrap[i].timer);
+        if (TimerCompleted(&g.scrap[i].timer)) g.scrap[i].active = false;
     }
 }
 
@@ -110,6 +121,7 @@ void PlayerUpdate(void)
 void GameLoop(void)
 {
     PlayerUpdate();
+    ScrapUpdate();
     CameraFollowPlayer();
 
     BeginDrawing();
@@ -135,6 +147,7 @@ void CreateNewScrap(Vector2 pos, u32 val)
                 .position = pos,
                 .active = true,
                 .value = val,
+                .timer = InitTimer(SCRAP_LIFETIME, false),
             };
         }
     }
