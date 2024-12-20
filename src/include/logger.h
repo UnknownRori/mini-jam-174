@@ -10,8 +10,8 @@
 #define DEBUG
 
 #ifdef DEBUG
-#define __LOG(message) printf("\e[1m[ LOG ] | %s (%d): %s \e[0m\n", __FILENAME__, __LINE__, message)
-#define __ERROR(message) printf("\e[1;41m[ERROR]\e[0m | \e[1m%s (%d): %s \e[0m\n", __FILENAME__, __LINE__, message)
+#define __LOG(format, ...) printf("\e[1m[ LOG ] | %s (%d): "format" \e[0m\n", __FILENAME__, __LINE__, ##__VA_ARGS__)
+#define __ERROR(format, ...) printf("\e[1;41m[ERROR]\e[0m | \e[1m%s (%d): "format" \e[0m\n", __FILENAME__, __LINE__, ##__VA_ARGS__)
 #else
 #define __LOG(message)
 #define __ERROR(message)
