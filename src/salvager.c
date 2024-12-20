@@ -31,7 +31,7 @@ void UIGameDraw(void)
     DrawTexturePro(a.spriteAtlas, SCRAP_SPRITE, dst, origin, 0, WHITE);
 
     char buffer[512] ={0};
-    snprintf(buffer, sizeof(buffer), "%d", g.scrap_collected - g.scrap_spent);
+    snprintf(buffer, sizeof(buffer), "%.0lf", g.scrap_collected - g.scrap_spent);
 
     DrawTextEx(a.font, buffer, (Vector2) {SCRAP_SPRITE.width + 24, SCRAP_SPRITE.height / 2.}, 24, 4, WHITE);
 }
@@ -61,7 +61,10 @@ void ScrapUpdate(void)
     {
         if (!g.scrap[i].active) continue;
         TimerUpdate(&g.scrap[i].timer);
-        if (TimerCompleted(&g.scrap[i].timer)) g.scrap[i].active = false;
+        if (TimerCompleted(&g.scrap[i].timer)) {
+            g.scrap[i].active = false;
+            __LOG("Scrap despawn");
+        }
     }
 }
 
@@ -136,7 +139,31 @@ void PlayerUpdate(void)
     }
 
     g.player.position = Vector2Add(Vector2Scale(g.player.velocity, delta), g.player.position);
+}
 
+void ScrapRemove(u32 id)
+{
+    g.scrap[id].active = false;
+}
+
+void ScrapPickup(void)
+{
+    Vector2 playerSize = (Vector2) {
+        .x = PLAYER_SPRITE.width,
+        .y = PLAYER_SPRITE.height,
+    };
+    Vector2 playerPos = Vector2Subtract(g.player.position, Vector2Scale(playerSize, 0.5));
+    DrawCircleV(playerPos, g.player.collecionRadius, (Color){255, 0, 0, 128});
+    for (u32 i = 0; i < SCRAP_LIMIT; i++)
+    {
+        if (g.scrap[i].active) {
+            if (CheckCollisionPointCircle(g.scrap[i].position, playerPos, g.player.collecionRadius)) {
+                __LOG("%f", g.scrap[i].value);
+                g.scrap_collected += g.scrap[i].value;
+                ScrapRemove(i);
+            }
+        }
+    }
 }
 
 void GameLoop(void)
@@ -150,6 +177,7 @@ void GameLoop(void)
 
         ParalaxDraw();
         BeginMode2D(g.camera);
+            ScrapPickup();
             ScrapDraw();
             PlayerDraw();
         EndMode2D();
@@ -160,17 +188,19 @@ void GameLoop(void)
 }
 
 
-void CreateNewScrap(Vector2 pos, u32 val)
+void CreateNewScrap(Vector2 pos, f32 val)
 {
     for (u32 i = 0; i < SCRAP_LIMIT; i++)
     {
         if (!g.scrap[i].active) {
+            __LOG("Scrap Created");
             g.scrap[i] = (Scrap) {
                 .position = pos,
                 .active = true,
                 .value = val,
                 .timer = InitTimer(SCRAP_LIFETIME, false),
             };
+            break;
         }
     }
 }
@@ -183,7 +213,9 @@ void GameInit(void)
     a.bg = LoadTexture("resources/bg.png");
     a.font = LoadFont("resources/PressStart2P-Regular.ttf");
 
-    CreateNewScrap((Vector2) {50, 50}, 20);
+    CreateNewScrap((Vector2) {50, 50}, 20.);
+    g.scrap_collected = 50.;
+    g.scrap_spent = 0.;
 
     g.paralax[0] = (Paralax) {
         .img = a.bg,
@@ -203,6 +235,7 @@ void GameInit(void)
         .maxSpeed = 300,
         .position = VECTOR2_ZERO,
         .acceleration = 150,
+        .collecionRadius = 32,
     };
 }
 void GameUnload(void)

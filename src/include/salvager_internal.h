@@ -13,7 +13,7 @@
 #define ASTEROID_LIFETIME 20
 
 #define SCRAP_LIMIT 512
-#define SCRAP_LIFETIME 10
+#define SCRAP_LIFETIME 15
 
 #define PARALAX_LIMIT 1
 #define PARALAX_MIN -2
@@ -49,7 +49,7 @@ typedef struct {
 
 typedef struct {
     Vector2 position;
-    u32 value;
+    f64 value;
 
     bool active;
     Timer timer;
@@ -68,8 +68,8 @@ typedef struct {
 
     u64 highscore;
     u64 score;
-    f64 scrap_collected;
-    f64 scrap_spent;
+    f32 scrap_collected;
+    f32 scrap_spent;
     Paralax paralax[PARALAX_LIMIT];
 
     Camera2D camera;
