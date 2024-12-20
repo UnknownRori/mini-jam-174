@@ -11,9 +11,11 @@
 
 #define ASTEROID_LIMIT 100
 #define ASTEROID_LIFETIME 120
-#define SCRAP_LIMIT 512
-#define PARALAX_LIMIT 1
 
+#define SCRAP_LIMIT 512
+#define SCRAP_LIFETIME 120
+
+#define PARALAX_LIMIT 1
 #define PARALAX_MIN -2
 #define PARALAX_MAX 1
 
@@ -40,11 +42,13 @@ typedef struct {
     f32 rotationSpeed;
 
     Timer lifetime;
+    bool active;
 } Asteroid;
 
 typedef struct {
     Vector2 position;
     u32 value;
+    bool active;
 } Scrap;
 
 typedef struct

@@ -1,5 +1,6 @@
 #include <raylib.h>
 #include <raymath.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
@@ -13,6 +14,25 @@ Game g = {0};
 Assets a = {0};
 Config c = {0};
 
+void ScrapDraw(void)
+{
+    for (u32 i = 0; i < SCRAP_LIMIT; i++)
+    {
+        if (!g.scrap[i].active) continue;
+        Rectangle dst = (Rectangle) {
+            .x = g.scrap[i].position.x - SCRAP_SPRITE.width / 2.,
+            .y = g.scrap[i].position.y - SCRAP_SPRITE.height / 2.,
+            .width = SCRAP_SPRITE.width,
+            .height = SCRAP_SPRITE.height,
+        };
+        Vector2 origin = (Vector2) {
+            .x = SCRAP_SPRITE.width / 2.,
+            .y = SCRAP_SPRITE.width / 2.,
+        };
+        DrawTexturePro(a.spriteAtlas, SCRAP_SPRITE, dst, origin, 0, WHITE);
+    }
+}
+
 void ParalaxDraw(void)
 {
     const Vector2 cameraPos = g.camera.target;
@@ -24,9 +44,9 @@ void ParalaxDraw(void)
         f32 wrappedY = fmodf(cameraPos.y * paralax->factor, paralax->img.height);
         if (wrappedX < 0) wrappedX += paralax->img.width;
         if (wrappedY < 0) wrappedX += paralax->img.height;
-        for (i32 x = PARALAX_MIN; x <= SCREEN_WIDTH / paralax->img.width + 1; x++)
+        for (i32 x = PARALAX_MIN; x <= SCREEN_WIDTH / paralax->img.width + 2; x++)
         {
-            for (i32 y = PARALAX_MIN; y < SCREEN_HEIGHT / paralax->img.height + 1; y++)
+            for (i32 y = PARALAX_MIN; y < SCREEN_HEIGHT / paralax->img.height + 2; y++)
             {
                 DrawTexture(
                     paralax->img, 
@@ -70,7 +90,7 @@ void PlayerUpdate(void)
     CLAMP(g.player.rotation, 0., 360.);
 
     if(IsKeyDown(KEY_UP)) {
-        f32 radian = (g.player.rotation - 270) * DEG2RAD;
+        f32 radian = (g.player.rotation - 90) * DEG2RAD;
         Vector2 forward = {cosf(radian), sinf(radian)};
         forward = Vector2Scale(forward, g.player.acceleration);
         forward = Vector2Scale(forward, delta);
@@ -97,12 +117,29 @@ void GameLoop(void)
 
         ParalaxDraw();
         BeginMode2D(g.camera);
+            ScrapDraw();
             PlayerDraw();
         EndMode2D();
 
         DrawFPS(0, SCREEN_HEIGHT - 24);
     EndDrawing();
 }
+
+
+void CreateNewScrap(Vector2 pos, u32 val)
+{
+    for (u32 i = 0; i < SCRAP_LIMIT; i++)
+    {
+        if (!g.scrap[i].active) {
+            g.scrap[i] = (Scrap) {
+                .position = pos,
+                .active = true,
+                .value = val,
+            };
+        }
+    }
+}
+
 void GameInit(void)
 {
     memset(&g, 0, sizeof(Game));
@@ -111,9 +148,11 @@ void GameInit(void)
     a.bg = LoadTexture("resources/bg.png");
     a.font = LoadFont("resources/PressStart2P-Regular.ttf");
 
+    CreateNewScrap((Vector2) {50, 50}, 20);
+
     g.paralax[0] = (Paralax) {
         .img = a.bg,
-        .factor = 2.5,
+        .factor = -0.5,
     };
 
     g.camera = (Camera2D) {
