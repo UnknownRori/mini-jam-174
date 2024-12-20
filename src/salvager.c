@@ -16,6 +16,26 @@ Game g = {0};
 Assets a = {0};
 Config c = {0};
 
+void UIGameDraw(void)
+{
+    Rectangle dst = (Rectangle) {
+        .x = 18,
+        .y = 18,
+        .width = SCRAP_SPRITE.width + 12,
+        .height = SCRAP_SPRITE.height + 12,
+    };
+    Vector2 origin = (Vector2) {
+        .x = SCRAP_SPRITE.width / 2.,
+        .y = SCRAP_SPRITE.width / 2.,
+    };
+    DrawTexturePro(a.spriteAtlas, SCRAP_SPRITE, dst, origin, 0, WHITE);
+
+    char buffer[512] ={0};
+    snprintf(buffer, sizeof(buffer), "%d", g.scrap_collected - g.scrap_spent);
+
+    DrawTextEx(a.font, buffer, (Vector2) {SCRAP_SPRITE.width + 24, SCRAP_SPRITE.height / 2.}, 24, 4, WHITE);
+}
+
 void ScrapDraw(void)
 {
     for (u32 i = 0; i < SCRAP_LIMIT; i++)
@@ -134,6 +154,7 @@ void GameLoop(void)
             PlayerDraw();
         EndMode2D();
 
+        UIGameDraw();
         DrawFPS(0, SCREEN_HEIGHT - 24);
     EndDrawing();
 }
