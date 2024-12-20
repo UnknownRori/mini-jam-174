@@ -12,6 +12,10 @@
 #define ASTEROID_LIMIT 100
 #define ASTEROID_LIFETIME 120
 #define SCRAP_LIMIT 512
+#define PARALAX_LIMIT 1
+
+#define PARALAX_MIN -2
+#define PARALAX_MAX 1
 
 typedef struct {
     Vector2 position;
@@ -43,10 +47,18 @@ typedef struct {
     u32 value;
 } Scrap;
 
+typedef struct
+{
+    Texture2D img;
+    f32 factor;
+} Paralax;
+
 typedef struct {
     Player player;
     Asteroid asteroid[ASTEROID_LIMIT];
     Scrap scrap[SCRAP_LIMIT];
+
+    Paralax paralax[PARALAX_LIMIT];
 
     Camera2D camera;
 } Game;

@@ -1,5 +1,6 @@
 #include <raylib.h>
 #include <raymath.h>
+#include <stdio.h>
 #include <math.h>
 #include <string.h>
 
@@ -11,6 +12,38 @@
 Game g = {0};
 Assets a = {0};
 Config c = {0};
+
+void ParalaxDraw(void)
+{
+    const Vector2 cameraPos = g.camera.target;
+    /*BeginBlendMode(BLEND_ALPHA);*/
+    for (u32 i = 0; i < PARALAX_MAX; i++)
+    {
+        const Paralax *paralax = &g.paralax[i];
+        f32 wrappedX = fmodf(cameraPos.x * paralax->factor, paralax->img.width);
+        f32 wrappedY = fmodf(cameraPos.y * paralax->factor, paralax->img.height);
+        if (wrappedX < 0) wrappedX += paralax->img.width;
+        if (wrappedY < 0) wrappedX += paralax->img.height;
+        for (i32 x = PARALAX_MIN; x <= SCREEN_WIDTH / paralax->img.width + 1; x++)
+        {
+            for (i32 y = PARALAX_MIN; y < SCREEN_HEIGHT / paralax->img.height + 1; y++)
+            {
+                DrawTexture(
+                    paralax->img, 
+                    wrappedX + x * paralax->img.width, 
+                    wrappedY + y * paralax->img.height, 
+                    WHITE
+                );
+            }
+        }
+    }
+    /*EndBlendMode();*/
+}
+
+void CameraFollowPlayer(void)
+{
+    g.camera.target = g.player.position;
+}
 
 void PlayerDraw(void)
 {
@@ -37,7 +70,7 @@ void PlayerUpdate(void)
     CLAMP(g.player.rotation, 0., 360.);
 
     if(IsKeyDown(KEY_UP)) {
-        float radian = (g.player.rotation - 90) * DEG2RAD;
+        f32 radian = (g.player.rotation - 270) * DEG2RAD;
         Vector2 forward = {cosf(radian), sinf(radian)};
         forward = Vector2Scale(forward, g.player.acceleration);
         forward = Vector2Scale(forward, delta);
@@ -57,10 +90,12 @@ void PlayerUpdate(void)
 void GameLoop(void)
 {
     PlayerUpdate();
+    CameraFollowPlayer();
 
     BeginDrawing();
         ClearBackground(BLACK);
 
+        ParalaxDraw();
         BeginMode2D(g.camera);
             PlayerDraw();
         EndMode2D();
@@ -76,9 +111,14 @@ void GameInit(void)
     a.bg = LoadTexture("resources/bg.png");
     a.font = LoadFont("resources/PressStart2P-Regular.ttf");
 
+    g.paralax[0] = (Paralax) {
+        .img = a.bg,
+        .factor = 2.5,
+    };
+
     g.camera = (Camera2D) {
         .rotation = 0,
-        .zoom = 2,
+        .zoom = 1,
         .offset = (Vector2){SCREEN_WIDTH / 2., SCREEN_HEIGHT / 2.},
         .target = (Vector2){0, 0},
     };
