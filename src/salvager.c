@@ -192,7 +192,7 @@ void GameInit(void)
 
     g.camera = (Camera2D) {
         .rotation = 0,
-        .zoom = 1,
+        .zoom = 1.25,
         .offset = (Vector2){SCREEN_WIDTH / 2., SCREEN_HEIGHT / 2.},
         .target = (Vector2){0, 0},
     };
