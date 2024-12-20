@@ -9,6 +9,7 @@
 #include "./include/salvager_internal.h"
 #include "./include/types.h"
 #include "./include/utils.h"
+#include "include/logger.h"
 #include "include/timer.h"
 
 Game g = {0};
