@@ -16,11 +16,11 @@ Game g = {0};
 Assets a = {0};
 Config c = {0};
 
-void UIGameDraw(void)
+void ResourceDraw(void)
 {
     Rectangle dst = (Rectangle) {
         .x = 18,
-        .y = 18,
+        .y = 24,
         .width = SCRAP_SPRITE.width + 12,
         .height = SCRAP_SPRITE.height + 12,
     };
@@ -33,8 +33,31 @@ void UIGameDraw(void)
     char buffer[512] ={0};
     snprintf(buffer, sizeof(buffer), "%.0lf", g.scrap_collected - g.scrap_spent);
 
-    DrawTextEx(a.font, buffer, (Vector2) {SCRAP_SPRITE.width + 24, SCRAP_SPRITE.height / 2.}, 24, 4, WHITE);
+    DrawTextEx(a.font, buffer, (Vector2) {SCRAP_SPRITE.width + 24, SCRAP_SPRITE.height / 2. + 12}, 24, 4, WHITE);
 }
+
+void ProgressDraw(Rectangle size, f32 current, f32 max, Color active, Color deactive)
+{
+    f32 currentPercentage = current / max;
+    CLAMP(currentPercentage, 0, 1);
+    float activeWidth = (size.width * currentPercentage);
+
+
+    DrawRectangleRec(size, deactive);
+    DrawRectangleRec((Rectangle) {
+        .x = size.x, 
+        .y = size.y, 
+        .width = activeWidth, 
+        .height = size.height
+    }, active);
+}
+
+void UIGameDraw(void)
+{
+    ResourceDraw();
+    ProgressDraw((Rectangle) {0, 0, SCREEN_WIDTH, 15}, g.scrap_collected, 100, GREEN, (Color) {255, 255, 255, 32});
+}
+
 
 void ScrapDraw(void)
 {
@@ -122,7 +145,7 @@ void PlayerUpdate(void)
     if (IsKeyDown(KEY_LEFT)) g.player.rotation -= g.player.rotationSpeed * delta;
     if (IsKeyDown(KEY_RIGHT)) g.player.rotation += g.player.rotationSpeed * delta;
 
-    CLAMP(g.player.rotation, 0., 360.);
+    CLAMP_WRAPPED(g.player.rotation, 0., 360.);
 
     if(IsKeyDown(KEY_UP)) {
         f32 radian = (g.player.rotation - 90) * DEG2RAD;
@@ -158,7 +181,7 @@ void ScrapPickup(void)
     {
         if (g.scrap[i].active) {
             if (CheckCollisionPointCircle(g.scrap[i].position, playerPos, g.player.collecionRadius)) {
-                __LOG("%f", g.scrap[i].value);
+                __LOG("Scrap Collected %.0f", g.scrap[i].value);
                 g.scrap_collected += g.scrap[i].value;
                 ScrapRemove(i);
             }
@@ -214,7 +237,7 @@ void GameInit(void)
     a.font = LoadFont("resources/PressStart2P-Regular.ttf");
 
     CreateNewScrap((Vector2) {50, 50}, 20.);
-    g.scrap_collected = 50.;
+    g.scrap_collected = 20.;
     g.scrap_spent = 0.;
 
     g.paralax[0] = (Paralax) {
@@ -232,9 +255,9 @@ void GameInit(void)
         .rotation = 0,
         .rotationSpeed = 250,
         .friction = .95,
-        .maxSpeed = 300,
+        .maxSpeed = 350,
         .position = VECTOR2_ZERO,
-        .acceleration = 150,
+        .acceleration = 200,
         .collecionRadius = 32,
     };
 }

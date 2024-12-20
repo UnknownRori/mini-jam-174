@@ -8,9 +8,13 @@
 
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
-#define CLAMP(x, min, max) {     \
+#define CLAMP_WRAPPED(x, min, max) {     \
     if(x < min) x += max;        \
     if(x >= min) x -= max;       \
+}
+#define CLAMP(x, min, max) {     \
+    if(x < min) x = min;        \
+    if(x >= max) x = max;       \
 }
 
 #define VECTOR2_ZERO ((Vector2){0,0})

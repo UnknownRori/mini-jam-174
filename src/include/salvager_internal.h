@@ -19,6 +19,9 @@
 #define PARALAX_MIN -2
 #define PARALAX_MAX 1
 
+#define LEVEL_REQUIREMENT 100
+#define LEVEL_MULTIPLIER 2
+
 typedef struct {
     Vector2 position;
     Vector2 velocity;
@@ -49,7 +52,7 @@ typedef struct {
 
 typedef struct {
     Vector2 position;
-    f64 value;
+    f32 value;
 
     bool active;
     Timer timer;
