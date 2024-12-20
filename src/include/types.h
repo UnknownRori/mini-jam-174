@@ -20,6 +20,7 @@ typedef uint64_t u64;
 typedef __uint128_t u128;
 
 typedef float f32;
+typedef long double f64;
 
 typedef double d32;
 typedef long double d64;

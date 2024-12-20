@@ -31,6 +31,8 @@ typedef struct {
     f32 rotation;
     f32 rotationSpeed;
 
+    f32 collecionRadius;
+
     Timer engineBlink;
 } Player;
 
@@ -66,8 +68,8 @@ typedef struct {
 
     u64 highscore;
     u64 score;
-    u64 scrap_collected;
-    u64 scrap_spent;
+    f64 scrap_collected;
+    f64 scrap_spent;
     Paralax paralax[PARALAX_LIMIT];
 
     Camera2D camera;
