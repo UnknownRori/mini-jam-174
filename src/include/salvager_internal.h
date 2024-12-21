@@ -100,6 +100,19 @@ typedef struct
     f32 factor;
 } Paralax;
 
+typedef enum
+{
+    SCENE_MAIN_MENU,
+    SCENE_GAME, 
+    SCENE_OPTION, 
+} GameScene;
+
+typedef enum
+{
+    EVENT_NORMAL,
+    EVENT_LEVEL_UP, 
+} GameEvent;
+
 typedef struct {
     Player player;
     Asteroid asteroid[ASTEROID_LIMIT];
@@ -113,6 +126,10 @@ typedef struct {
     Paralax paralax[PARALAX_LIMIT];
 
     Camera2D camera;
+
+    bool paused;
+    GameScene scene;
+    GameEvent event;
 } Game;
 
 typedef struct {

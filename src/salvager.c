@@ -64,13 +64,19 @@ void CameraFollowPlayer(void)
 
 void GameLoop(void)
 {
-    PlayerUpdate();
-    ScrapUpdate();
-    ScrapPickup();
-    AsteroidUpdate();
-    BulletPlayerUpdate();
-    BulletPlayerCollisionWithAsteroid();
-    CameraFollowPlayer();
+    if (IsKeyPressed(KEY_ESCAPE)) g.paused = !g.paused;
+
+    if (!g.paused)
+    {
+
+        PlayerUpdate();
+        ScrapUpdate();
+        ScrapPickup();
+        AsteroidUpdate();
+        BulletPlayerUpdate();
+        BulletPlayerCollisionWithAsteroid();
+        CameraFollowPlayer();
+    }
 
     BeginDrawing();
         ClearBackground(BLACK);
@@ -83,6 +89,11 @@ void GameLoop(void)
             PlayerDraw();
         EndMode2D();
 
+        if (g.paused)
+        {
+            DrawRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, (Color) {32, 32, 32, 128});
+        }
+
         UIGameDraw();
         DrawFPS(0, SCREEN_HEIGHT - 24);
     EndDrawing();
@@ -91,6 +102,8 @@ void GameLoop(void)
 void GameInit(void)
 {
     memset(&g, 0, sizeof(Game));
+
+    SetExitKey(KEY_F1);
 
     a.spriteAtlas = LoadTexture("resources/atlas.png");
     a.bg = LoadTexture("resources/bg.png");
@@ -105,6 +118,8 @@ void GameInit(void)
     CreateNewAsteroid((Vector2) {-18, 40}, (MovementParams) {{20, -5}, 5}, 4);
     g.scrap_collected = 20.;
     g.scrap_spent = 0.;
+    g.event = EVENT_NORMAL;
+    g.scene = SCENE_GAME;
 
     g.paralax[0] = (Paralax) {
         .img = a.bg,
