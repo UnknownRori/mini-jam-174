@@ -12,6 +12,7 @@
 #include "./scrap.h"
 #include "include/logger.h"
 #include "include/timer.h"
+#include "utils.h"
 
 #include "./asteroid.h"
 
@@ -95,10 +96,20 @@ void AsteroidUpdate(void)
         g.asteroid[i].position = Vector2Add(Vector2Scale(g.asteroid[i].velocity, delta), g.asteroid[i].position);
         CLAMP_WRAPPED(g.asteroid[i].rotation, 0., 360.);
 
-        TimerUpdate(&g.asteroid[i].lifetime);
-        if (TimerCompleted(&g.asteroid[i].lifetime)) {
-            g.asteroid[i].active = false;
-            __LOG("Asteroid (%d) despawn", i);
+        Rectangle asteroidRect = (Rectangle) {
+            .x = g.asteroid[i].position.x,
+            .y = g.asteroid[i].position.y,
+            .width = g.asteroid[i].sprite.width,
+            .height = g.asteroid[i].sprite.height,
+        };
+
+        if (CheckIfInGameSpace(asteroidRect, g.camera, SCREEN_WIDTH, SCREEN_HEIGHT))
+        {
+            TimerUpdate(&g.asteroid[i].lifetime);
+            if (TimerCompleted(&g.asteroid[i].lifetime)) {
+                g.asteroid[i].active = false;
+                __LOG("Asteroid (%d) despawn", i);
+            }
         }
     }
 }
