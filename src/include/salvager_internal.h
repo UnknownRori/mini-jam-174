@@ -106,4 +106,8 @@ typedef struct {
     Music bgm;
 } Assets;
 
+extern Game g;
+extern Assets a;
+extern Config c;
+
 #endif
