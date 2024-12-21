@@ -23,6 +23,7 @@
 #define PARALAX_MIN -2
 #define PARALAX_MAX 1
 
+#define DEFAULT_COOLDOWN_PLAYER_SHOT 30
 #define LEVEL_REQUIREMENT 100
 #define LEVEL_MULTIPLIER 2
 
@@ -59,6 +60,7 @@ typedef struct {
     f32 rotationSpeed;
 
     f32 hp;
+    f32 scrap;
     f32 hitboxRadius;
     Timer lifetime;
     bool active;
@@ -109,12 +111,12 @@ typedef struct {
     f32 bgmVolume;
 } Config;
 
-#define PLAYER_SPRITE ((Rectangle) {0, 0, 32, 32})
-#define ENGINE_EXHAUST_SPRITE ((Rectangle) {160, 0, 32, 32})
-#define SCRAP_SPRITE ((Rectangle) {192, 0, 32, 32})
-#define ASTEROID_SPRITE1 ((Rectangle) {0, 64, 32, 32})
-#define ASTEROID_SPRITE2 ((Rectangle) {32, 64, 32, 32})
-#define PLAYER_BULLET_SPRITE ((Rectangle) {128, 0, 32, 32})
+#define PLAYER_SPRITE ((Rectangle) {0., 0., 32., 32.})
+#define ENGINE_EXHAUST_SPRITE ((Rectangle) {160., 0., 32., 32.})
+#define SCRAP_SPRITE ((Rectangle) {192., 0., 32., 32.})
+#define ASTEROID_SPRITE1 ((Rectangle) {0., 64., 32., 32.})
+#define ASTEROID_SPRITE2 ((Rectangle) {32., 64., 32., 32.})
+#define PLAYER_BULLET_SPRITE ((Rectangle) {128., 0., 32., 32.})
 
 typedef struct {
     Texture2D spriteAtlas;

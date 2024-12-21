@@ -72,7 +72,11 @@ void BulletPlayerCollisionWithAsteroid(void)
                 .x = ASTEROID_SPRITE1.width / 2.,
                 .y = ASTEROID_SPRITE1.height / 2.,
             });
-            if (CheckCollisionPointCircle(g.playerBullet[bi].position, centerAsteroid, g.asteroid[ai].hitboxRadius))
+            Vector2 centerBullet = Vector2Subtract(g.playerBullet[bi].position, (Vector2) {
+                .x = PLAYER_BULLET_SPRITE.width / 2.,
+                .y = PLAYER_BULLET_SPRITE.height / 2.,
+            });
+            if (CheckCollisionPointCircle(centerBullet, centerAsteroid, g.asteroid[ai].hitboxRadius))
             {
                 __LOG("Hit");
                 g.asteroid[ai].hp -= g.playerBullet[bi].damage;

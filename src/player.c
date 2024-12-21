@@ -55,6 +55,9 @@ void PlayerUpdate(void)
 
     g.player.position = Vector2Add(Vector2Scale(g.player.velocity, delta), g.player.position);
 
+    TimerUpdate(&g.player.shotCooldown);
+    if (TimerCompleted(&g.player.shotCooldown)) return;
+
     if (IsKeyDown(KEY_Z)) 
     {
         f32 radian = (g.player.rotation - 90) * DEG2RAD;

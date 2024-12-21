@@ -122,6 +122,7 @@ void GameInit(void)
 
         .damage = 1,
         .collecionRadius = 32,
+        .shotCooldown = InitTimer(DEFAULT_COOLDOWN_PLAYER_SHOT, true),
     };
 }
 void GameUnload(void)

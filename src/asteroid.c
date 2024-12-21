@@ -9,6 +9,7 @@
 #include "./include/salvager_internal.h"
 #include "./include/types.h"
 #include "./include/utils.h"
+#include "./scrap.h"
 #include "include/logger.h"
 #include "include/timer.h"
 
@@ -25,6 +26,8 @@ void CreateNewAsteroid(Vector2 pos, MovementParams move, f32 hp)
             .active = true,
             .lifetime = InitTimer(ASTEROID_LIFETIME, false),
             .position = pos,
+            .hitboxRadius = 16,
+            .scrap = 12,
             .rotationSpeed = move.rotationSpeed,
             .velocity = move.velociy,
             .rotation = 0,
@@ -52,7 +55,7 @@ void AsteroidDraw(void)
             .y = ASTEROID_SPRITE1.width / 2.,
         };
         DrawTexturePro(a.spriteAtlas, ASTEROID_SPRITE1, dst, origin, g.asteroid[i].rotation, WHITE);
-        DrawCircleV((Vector2) {.x = g.asteroid[i].position.x, .y = g.asteroid[i].position.y }, g.asteroid[i].hitboxRadius, (Color) {255, 0, 0, 128});
+        /*DrawCircleV((Vector2) {dst.x, dst.y}, g.asteroid[i].hitboxRadius, (Color) {255, 0, 0, 128});*/
     }
 }
 
@@ -66,6 +69,7 @@ void AsteroidUpdate(void)
         if (g.asteroid[i].hp < 0)
         {
             g.asteroid[i].active = false;
+            CreateNewScrap(g.asteroid[i].position, g.asteroid[i].scrap);
             continue;
         }
         g.asteroid[i].rotation += g.asteroid[i].rotationSpeed * delta;
