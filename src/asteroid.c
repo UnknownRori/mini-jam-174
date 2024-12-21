@@ -15,15 +15,30 @@
 
 #include "./asteroid.h"
 
+Rectangle static GetSpriteAsteroid(int index)
+{
+    switch(index) {
+        case 0:
+            return ASTEROID_SPRITE1;
+        case 1:
+            return ASTEROID_SPRITE2;
+        default:
+            return ASTEROID_SPRITE1;
+    }
+}
+
 void CreateNewAsteroid(Vector2 pos, MovementParams move, f32 hp)
 {
+    int rand = GetRandomValue(0, 1);
     for (u32 i = 0; i < ASTEROID_LIMIT; i++)
     {
         if (g.asteroid[i].active) continue;
         __LOG("Asteroid Created");
 
         g.asteroid[i] = (Asteroid) {
+            .type = rand,
             .active = true,
+            .sprite = GetSpriteAsteroid(rand),
             .lifetime = InitTimer(ASTEROID_LIFETIME, false),
             .position = pos,
             .hitboxRadius = 16,
@@ -44,17 +59,18 @@ void AsteroidDraw(void)
     for (u32 i = 0; i < ASTEROID_LIMIT ; i++)
     {
         if (!g.asteroid[i].active) continue;
+        
         Rectangle dst = (Rectangle) {
-            .x = g.asteroid[i].position.x - ASTEROID_SPRITE1.width / 2.,
-            .y = g.asteroid[i].position.y - ASTEROID_SPRITE1.height / 2.,
-            .width = ASTEROID_SPRITE1.width,
-            .height = ASTEROID_SPRITE1.height,
+            .x = g.asteroid[i].position.x - g.asteroid[i].sprite.width / 2.,
+            .y = g.asteroid[i].position.y - g.asteroid[i].sprite.height / 2.,
+            .width = g.asteroid[i].sprite.width,
+            .height = g.asteroid[i].sprite.height,
         };
         Vector2 origin = (Vector2) {
-            .x = ASTEROID_SPRITE1.width / 2.,
-            .y = ASTEROID_SPRITE1.width / 2.,
+            .x = g.asteroid[i].sprite.width / 2.,
+            .y = g.asteroid[i].sprite.width / 2.,
         };
-        DrawTexturePro(a.spriteAtlas, ASTEROID_SPRITE1, dst, origin, g.asteroid[i].rotation, WHITE);
+        DrawTexturePro(a.spriteAtlas, g.asteroid[i].sprite, dst, origin, g.asteroid[i].rotation, WHITE);
         /*DrawCircleV((Vector2) {dst.x, dst.y}, g.asteroid[i].hitboxRadius, (Color) {255, 0, 0, 128});*/
     }
 }

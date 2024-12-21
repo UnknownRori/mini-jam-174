@@ -98,6 +98,11 @@ void GameInit(void)
 
     CreateNewScrap((Vector2) {50, 50}, 20.);
     CreateNewAsteroid((Vector2) {-80, 80}, (MovementParams) {{10, 5}, 5}, 4);
+    CreateNewAsteroid((Vector2) {-50, 20}, (MovementParams) {{-10, 5}, 5}, 4);
+    CreateNewAsteroid((Vector2) {-20, 40}, (MovementParams) {{10, -5}, 5}, 4);
+    CreateNewAsteroid((Vector2) {-24, 20}, (MovementParams) {{-10, -5}, 5}, 4);
+    CreateNewAsteroid((Vector2) {-38, 40}, (MovementParams) {{20, -5}, 5}, 4);
+    CreateNewAsteroid((Vector2) {-18, 40}, (MovementParams) {{20, -5}, 5}, 4);
     g.scrap_collected = 20.;
     g.scrap_spent = 0.;
 

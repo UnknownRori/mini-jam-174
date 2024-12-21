@@ -52,7 +52,16 @@ typedef struct
     f32 rotationSpeed;
 } MovementParams;
 
+typedef enum {
+    ASTEROID_SMALL_1,
+    ASTEROID_SMALL_2,
+} AsteroidType;
+
+
 typedef struct {
+    AsteroidType type;
+    Rectangle sprite;
+
     Vector2 position;
     Vector2 velocity;
 
