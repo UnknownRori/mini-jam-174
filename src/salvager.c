@@ -11,9 +11,11 @@
 #include "./player.h"
 #include "./scrap.h"
 #include "./ui.h"
+#include "./paralax.h"
 #include "./include/types.h"
 #include "./include/utils.h"
 #include "bullet.h"
+#include "event.h"
 #include "include/logger.h"
 #include "include/timer.h"
 
@@ -25,36 +27,9 @@ Config c = {0};
 void UIGameDraw(void)
 {
     ResourceDraw();
-    ProgressDraw((Rectangle) {0, 0, SCREEN_WIDTH, 15}, g.scrap_collected, 100, GREEN, (Color) {255, 255, 255, 32});
+    ProgressDraw((Rectangle) {0, 0, SCREEN_WIDTH, 15}, g.scrap_collected, LevelUpRequirement(), GREEN, (Color) {255, 255, 255, 32});
 }
 
-
-void ParalaxDraw(void)
-{
-    const Vector2 cameraPos = g.camera.target;
-    /*BeginBlendMode(BLEND_ALPHA);*/
-    for (u32 i = 0; i < PARALAX_MAX; i++)
-    {
-        const Paralax *paralax = &g.paralax[i];
-        f32 wrappedX = fmodf(cameraPos.x * paralax->factor, paralax->img.width);
-        f32 wrappedY = fmodf(cameraPos.y * paralax->factor, paralax->img.height);
-        if (wrappedX < 0) wrappedX += paralax->img.width;
-        if (wrappedY < 0) wrappedX += paralax->img.height;
-        for (i32 x = PARALAX_MIN; x <= SCREEN_WIDTH / paralax->img.width + 2; x++)
-        {
-            for (i32 y = PARALAX_MIN; y < SCREEN_HEIGHT / paralax->img.height + 2; y++)
-            {
-                DrawTexture(
-                    paralax->img, 
-                    wrappedX + x * paralax->img.width, 
-                    wrappedY + y * paralax->img.height, 
-                    WHITE
-                );
-            }
-        }
-    }
-    /*EndBlendMode();*/
-}
 
 void CameraFollowPlayer(void)
 {
@@ -64,7 +39,11 @@ void CameraFollowPlayer(void)
 
 void GameLoop(void)
 {
-    if (IsKeyPressed(KEY_ESCAPE)) g.paused = !g.paused;
+    if (g.event == EVENT_NORMAL) {
+        if (IsKeyPressed(KEY_ESCAPE)) g.paused = !g.paused;
+    }
+
+    EventUpdate();
 
     if (!g.paused)
     {
@@ -76,6 +55,11 @@ void GameLoop(void)
         BulletPlayerUpdate();
         BulletPlayerCollisionWithAsteroid();
         CameraFollowPlayer();
+    }
+
+    if (g.event == EVENT_LEVEL_UP)
+    {
+        LevelupSelectionUpdate();
     }
 
     BeginDrawing();
@@ -92,6 +76,11 @@ void GameLoop(void)
         if (g.paused)
         {
             DrawRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, (Color) {32, 32, 32, 128});
+        }
+
+        if (g.event == EVENT_LEVEL_UP)
+        {
+            LevelupSelectionDraw();
         }
 
         UIGameDraw();
@@ -120,6 +109,7 @@ void GameInit(void)
     g.scrap_spent = 0.;
     g.event = EVENT_NORMAL;
     g.scene = SCENE_GAME;
+    g.level = 1;
 
     g.paralax[0] = (Paralax) {
         .img = a.bg,

@@ -23,7 +23,8 @@
 #define PARALAX_MIN -2
 #define PARALAX_MAX 1
 
-#define DEFAULT_COOLDOWN_PLAYER_SHOT 0.8
+/*#define DEFAULT_COOLDOWN_PLAYER_SHOT 0.8*/
+#define DEFAULT_COOLDOWN_PLAYER_SHOT 0.1
 #define LEVEL_REQUIREMENT 100
 #define LEVEL_MULTIPLIER 2
 
@@ -123,6 +124,7 @@ typedef struct {
     u64 score;
     f32 scrap_collected;
     f32 scrap_spent;
+    u32 level;
     Paralax paralax[PARALAX_LIMIT];
 
     Camera2D camera;

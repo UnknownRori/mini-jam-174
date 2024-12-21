@@ -14,6 +14,15 @@
 
 #include "./ui.h"
 
+void LevelupSelectionDraw(void)
+{
+
+}
+void LevelupSelectionUpdate(void)
+{
+
+}
+
 void ResourceDraw(void)
 {
     Rectangle dst = (Rectangle) {
