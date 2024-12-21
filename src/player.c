@@ -9,6 +9,7 @@
 #include "./include/salvager_internal.h"
 #include "./include/types.h"
 #include "./include/utils.h"
+#include "bullet.h"
 #include "include/logger.h"
 #include "include/timer.h"
 
@@ -53,4 +54,18 @@ void PlayerUpdate(void)
     }
 
     g.player.position = Vector2Add(Vector2Scale(g.player.velocity, delta), g.player.position);
+
+    if (IsKeyDown(KEY_Z)) 
+    {
+        f32 radian = (g.player.rotation - 90) * DEG2RAD;
+        Vector2 forward = {cosf(radian), sinf(radian)};
+        forward = Vector2Scale(forward, BULLET_VELOCITY);
+        forward = Vector2Scale(forward, delta);
+        BulletPlayerCreate(g.player.position, (MovementParams) 
+        {.
+            velociy = forward,
+            .rotationSpeed = g.player.rotation
+        },
+        g.player.damage);
+    }
 }

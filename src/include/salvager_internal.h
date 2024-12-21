@@ -10,10 +10,14 @@
 #include "./utils.h"
 
 #define ASTEROID_LIMIT 100
-#define ASTEROID_LIFETIME 40
+#define ASTEROID_LIFETIME 80
 
 #define SCRAP_LIMIT 512
-#define SCRAP_LIFETIME 15
+#define SCRAP_LIFETIME 30
+
+#define BULLET_LIMIT 512
+#define BULLET_LIFETIME 5
+#define BULLET_VELOCITY 300
 
 #define PARALAX_LIMIT 1
 #define PARALAX_MIN -2
@@ -35,8 +39,10 @@ typedef struct {
     f32 rotationSpeed;
 
     f32 collecionRadius;
+    f32 damage;
 
     Timer engineBlink;
+    Timer shotCooldown;
 } Player;
 
 typedef struct
@@ -52,9 +58,22 @@ typedef struct {
     f32 rotation;
     f32 rotationSpeed;
 
+    f32 hp;
+    f32 hitboxRadius;
     Timer lifetime;
     bool active;
 } Asteroid;
+
+typedef struct
+{
+    Vector2 position;
+    Vector2 velocity;
+    f32 rotation;
+    f32 damage;
+
+    Timer lifetime;
+    bool active;
+} PlayerBullet;
 
 typedef struct {
     Vector2 position;
@@ -74,6 +93,7 @@ typedef struct {
     Player player;
     Asteroid asteroid[ASTEROID_LIMIT];
     Scrap scrap[SCRAP_LIMIT];
+    PlayerBullet playerBullet[BULLET_LIMIT];
 
     u64 highscore;
     u64 score;
@@ -94,6 +114,7 @@ typedef struct {
 #define SCRAP_SPRITE ((Rectangle) {192, 0, 32, 32})
 #define ASTEROID_SPRITE1 ((Rectangle) {0, 64, 32, 32})
 #define ASTEROID_SPRITE2 ((Rectangle) {32, 64, 32, 32})
+#define PLAYER_BULLET_SPRITE ((Rectangle) {128, 0, 32, 32})
 
 typedef struct {
     Texture2D spriteAtlas;

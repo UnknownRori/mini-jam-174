@@ -7,7 +7,7 @@
 #include "./include/salvager_internal.h"
 #include "./include/types.h"
 
-void CreateNewAsteroid(Vector2 pos, MovementParams move);
+void CreateNewAsteroid(Vector2 pos, MovementParams move, f32 hp);
 void AsteroidDraw(void);
 void AsteroidUpdate(void);
 

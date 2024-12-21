@@ -14,7 +14,7 @@
 
 #include "./asteroid.h"
 
-void CreateNewAsteroid(Vector2 pos, MovementParams move)
+void CreateNewAsteroid(Vector2 pos, MovementParams move, f32 hp)
 {
     for (u32 i = 0; i < ASTEROID_LIMIT; i++)
     {
@@ -28,6 +28,7 @@ void CreateNewAsteroid(Vector2 pos, MovementParams move)
             .rotationSpeed = move.rotationSpeed,
             .velocity = move.velociy,
             .rotation = 0,
+            .hp = hp,
         };
 
         break;
@@ -50,18 +51,29 @@ void AsteroidDraw(void)
             .x = ASTEROID_SPRITE1.width / 2.,
             .y = ASTEROID_SPRITE1.width / 2.,
         };
-        DrawTexturePro(a.spriteAtlas, ASTEROID_SPRITE1, dst, origin, 0, WHITE);
+        DrawTexturePro(a.spriteAtlas, ASTEROID_SPRITE1, dst, origin, g.asteroid[i].rotation, WHITE);
+        DrawCircleV((Vector2) {.x = g.asteroid[i].position.x, .y = g.asteroid[i].position.y }, g.asteroid[i].hitboxRadius, (Color) {255, 0, 0, 128});
     }
 }
 
 void AsteroidUpdate(void)
 {
+    f32 delta = GetFrameTime();
     for (u32 i = 0; i < ASTEROID_LIMIT; i++)
     {
         if (!g.asteroid[i].active) continue;
 
-        TimerUpdate(&g.scrap[i].timer);
-        if (TimerCompleted(&g.scrap[i].timer)) {
+        if (g.asteroid[i].hp < 0)
+        {
+            g.asteroid[i].active = false;
+            continue;
+        }
+        g.asteroid[i].rotation += g.asteroid[i].rotationSpeed * delta;
+        g.asteroid[i].position = Vector2Add(Vector2Scale(g.asteroid[i].velocity, delta), g.asteroid[i].position);
+        CLAMP_WRAPPED(g.asteroid[i].rotation, 0., 360.);
+
+        TimerUpdate(&g.asteroid[i].lifetime);
+        if (TimerCompleted(&g.asteroid[i].lifetime)) {
             g.asteroid[i].active = false;
             __LOG("Asteroid (%d) despawn", i);
         }

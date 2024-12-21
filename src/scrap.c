@@ -13,6 +13,24 @@
 
 #include "./scrap.h"
 
+void CreateNewScrap(Vector2 pos, f32 val)
+{
+    for (u32 i = 0; i < SCRAP_LIMIT; i++)
+    {
+        if (!g.scrap[i].active) {
+            __LOG("Scrap Created");
+            g.scrap[i] = (Scrap) {
+                .position = pos,
+                .active = true,
+                .value = val,
+                .timer = InitTimer(SCRAP_LIFETIME, false),
+            };
+            break;
+        }
+    }
+}
+
+
 void ScrapDraw(void)
 {
     for (u32 i = 0; i < SCRAP_LIMIT; i++)

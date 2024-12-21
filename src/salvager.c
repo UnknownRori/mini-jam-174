@@ -13,6 +13,7 @@
 #include "./ui.h"
 #include "./include/types.h"
 #include "./include/utils.h"
+#include "bullet.h"
 #include "include/logger.h"
 #include "include/timer.h"
 
@@ -67,6 +68,8 @@ void GameLoop(void)
     ScrapUpdate();
     ScrapPickup();
     AsteroidUpdate();
+    BulletPlayerUpdate();
+    BulletPlayerCollisionWithAsteroid();
     CameraFollowPlayer();
 
     BeginDrawing();
@@ -76,29 +79,13 @@ void GameLoop(void)
         BeginMode2D(g.camera);
             ScrapDraw();
             AsteroidDraw();
+            BulletPlayerDraw();
             PlayerDraw();
         EndMode2D();
 
         UIGameDraw();
         DrawFPS(0, SCREEN_HEIGHT - 24);
     EndDrawing();
-}
-
-void CreateNewScrap(Vector2 pos, f32 val)
-{
-    for (u32 i = 0; i < SCRAP_LIMIT; i++)
-    {
-        if (!g.scrap[i].active) {
-            __LOG("Scrap Created");
-            g.scrap[i] = (Scrap) {
-                .position = pos,
-                .active = true,
-                .value = val,
-                .timer = InitTimer(SCRAP_LIFETIME, false),
-            };
-            break;
-        }
-    }
 }
 
 void GameInit(void)
@@ -110,7 +97,7 @@ void GameInit(void)
     a.font = LoadFont("resources/PressStart2P-Regular.ttf");
 
     CreateNewScrap((Vector2) {50, 50}, 20.);
-    CreateNewAsteroid((Vector2) {-80, 80}, (MovementParams) {{10, 5}, 5});
+    CreateNewAsteroid((Vector2) {-80, 80}, (MovementParams) {{10, 5}, 5}, 4);
     g.scrap_collected = 20.;
     g.scrap_spent = 0.;
 
@@ -132,6 +119,8 @@ void GameInit(void)
         .maxSpeed = 350,
         .position = VECTOR2_ZERO,
         .acceleration = 200,
+
+        .damage = 1,
         .collecionRadius = 32,
     };
 }
