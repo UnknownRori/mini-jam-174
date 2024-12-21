@@ -56,10 +56,11 @@ void PlayerUpdate(void)
     g.player.position = Vector2Add(Vector2Scale(g.player.velocity, delta), g.player.position);
 
     TimerUpdate(&g.player.shotCooldown);
-    if (TimerCompleted(&g.player.shotCooldown)) return;
+    if (!TimerCompleted(&g.player.shotCooldown)) return;
 
     if (IsKeyDown(KEY_Z)) 
     {
+        TimerReset(&g.player.shotCooldown);
         f32 radian = (g.player.rotation - 90) * DEG2RAD;
         Vector2 forward = {cosf(radian), sinf(radian)};
         forward = Vector2Scale(forward, BULLET_VELOCITY);
