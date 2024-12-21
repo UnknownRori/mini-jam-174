@@ -80,7 +80,7 @@ void ScrapPickup(void)
         if (g.scrap[i].active) {
             if (CheckCollisionPointCircle(g.scrap[i].position, playerPos, g.player.collectionRadius)) {
                 __LOG("Scrap Collected %.0f", g.scrap[i].value);
-                g.scrap_collected += g.scrap[i].value;
+                g.scrap_collected += g.scrap[i].value * g.multiplier_scrap;
                 ScrapRemove(i);
             }
         }

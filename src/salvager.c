@@ -110,6 +110,7 @@ void GameInit(void)
     g.event = EVENT_NORMAL;
     g.scene = SCENE_GAME;
     g.level = 1;
+    g.multiplier_scrap = 1;
 
     g.paralax[0] = (Paralax) {
         .img = a.bg,

@@ -125,6 +125,7 @@ typedef struct {
     f32 scrap_collected;
     f32 scrap_spent;
     u32 level;
+    f32 multiplier_scrap;
     Paralax paralax[PARALAX_LIMIT];
 
     Camera2D camera;

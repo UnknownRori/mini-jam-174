@@ -26,8 +26,10 @@ void LevelUpPlayer(LevelType l)
             g.player.collectionRadius += 20;
         break;
         case LEVEL_UP_FAST_FIRE:
+            g.player.shotCooldown.lifetime *= 0.8;
         break;
         case LEVEL_UP_MULTIPLY_DROP_RATE:
+            g.multiplier_scrap *= 2.2;
         break;
     }
 }
