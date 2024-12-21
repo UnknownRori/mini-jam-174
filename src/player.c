@@ -59,18 +59,21 @@ void PlayerUpdate(void)
     TimerUpdate(&g.player.shotCooldown);
     if (!TimerCompleted(&g.player.shotCooldown)) return;
 
-    if (IsKeyDown(KEY_Z)) 
+    if (IsKeyDown(KEY_Z) &&  0 <= (g.scrap_collected - g.scrap_spent)) 
     {
         TimerReset(&g.player.shotCooldown);
         f32 radian = (g.player.rotation - 90) * DEG2RAD;
         Vector2 forward = {cosf(radian), sinf(radian)};
         forward = Vector2Scale(forward, BULLET_VELOCITY);
         forward = Vector2Scale(forward, delta);
+        g.scrap_spent += 0.5;
         BulletPlayerCreate(g.player.position, (MovementParams) 
-        {.
-            velociy = forward,
-            .rotationSpeed = g.player.rotation
-        },
-        g.player.damage);
+            {.
+                velociy = forward,
+                .rotationSpeed = g.player.rotation
+            },
+            g.player.damage
+        );
+        PlaySound(a.playerShot);
     }
 }

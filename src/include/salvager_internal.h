@@ -153,8 +153,11 @@ typedef struct {
 
     Font font;
 
-    Sound shoot;
+    Sound playerShot;
+    Sound hit;
+    Sound explosiveAsteroid;
     Sound pickUp;
+
     Music bgm;
 } Assets;
 

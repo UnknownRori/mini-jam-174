@@ -15,6 +15,8 @@
 
 #include "./asteroid.h"
 
+static Timer interval = {0};
+
 Rectangle static GetSpriteAsteroid(int index)
 {
     switch(index) {
@@ -85,6 +87,7 @@ void AsteroidUpdate(void)
         if (g.asteroid[i].hp < 0)
         {
             g.asteroid[i].active = false;
+            PlaySound(a.explosiveAsteroid);
             CreateNewScrap(g.asteroid[i].position, g.asteroid[i].scrap);
             continue;
         }
@@ -100,3 +103,5 @@ void AsteroidUpdate(void)
     }
 }
 
+void SetGenerateAsteroidInterval(Timer time){}
+void GenerateAsteroid(){}

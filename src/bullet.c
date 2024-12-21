@@ -79,6 +79,7 @@ void BulletPlayerCollisionWithAsteroid(void)
             if (CheckCollisionPointCircle(centerBullet, centerAsteroid, g.asteroid[ai].hitboxRadius))
             {
                 __LOG("Hit");
+                PlaySound(a.hit);
                 g.playerBullet[bi].active = false;
                 g.asteroid[ai].hp -= g.playerBullet[bi].damage;
             }

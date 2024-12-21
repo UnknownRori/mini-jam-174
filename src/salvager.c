@@ -39,6 +39,7 @@ void CameraFollowPlayer(void)
 
 void GameLoop(void)
 {
+    UpdateMusicStream(a.bgm);
     if (g.event == EVENT_NORMAL) {
         if (IsKeyPressed(KEY_ESCAPE)) g.paused = !g.paused;
     }
@@ -47,13 +48,13 @@ void GameLoop(void)
 
     if (!g.paused)
     {
-
         PlayerUpdate();
         ScrapUpdate();
         ScrapPickup();
         AsteroidUpdate();
         BulletPlayerUpdate();
         BulletPlayerCollisionWithAsteroid();
+        GenerateAsteroid();
         CameraFollowPlayer();
     }
 
@@ -97,6 +98,13 @@ void GameInit(void)
     a.spriteAtlas = LoadTexture("resources/atlas.png");
     a.bg = LoadTexture("resources/bg.png");
     a.font = LoadFont("resources/PressStart2P-Regular.ttf");
+    a.playerShot = LoadSound("resources/playershot.wav");
+    a.pickUp = LoadSound("resources/pickup.wav");
+    a.hit = LoadSound("resources/hit.wav");
+    a.explosiveAsteroid = LoadSound("resources/explosive-asteroid.wav");
+    a.bgm = LoadMusicStream("resources/mini-jam-bgm.ogg");
+    PlayMusicStream(a.bgm);
+    SetMusicVolume(a.bgm, 1.);
 
     CreateNewScrap((Vector2) {50, 50}, 20.);
     CreateNewAsteroid((Vector2) {-80, 80}, (MovementParams) {{10, 5}, 5}, 4);
@@ -140,4 +148,9 @@ void GameUnload(void)
 {
     UnloadTexture(a.spriteAtlas);
     UnloadTexture(a.bg);
+    UnloadMusicStream(a.bgm);
+    UnloadSound(a.playerShot);
+    UnloadSound(a.hit);
+    UnloadSound(a.explosiveAsteroid);
+    UnloadSound(a.pickUp);
 }
