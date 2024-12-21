@@ -58,6 +58,38 @@ void UIGameDraw(void)
     ProgressDraw((Rectangle) {0, 0, SCREEN_WIDTH, 15}, g.scrap_collected, 100, GREEN, (Color) {255, 255, 255, 32});
 }
 
+void AsteroidDraw(void)
+{
+    for (u32 i = 0; i < ASTEROID_LIMIT ; i++)
+    {
+        if (!g.asteroid[i].active) continue;
+        Rectangle dst = (Rectangle) {
+            .x = g.asteroid[i].position.x - ASTEROID_SPRITE1.width / 2.,
+            .y = g.asteroid[i].position.y - ASTEROID_SPRITE1.height / 2.,
+            .width = ASTEROID_SPRITE1.width,
+            .height = ASTEROID_SPRITE1.height,
+        };
+        Vector2 origin = (Vector2) {
+            .x = ASTEROID_SPRITE1.width / 2.,
+            .y = ASTEROID_SPRITE1.width / 2.,
+        };
+        DrawTexturePro(a.spriteAtlas, ASTEROID_SPRITE1, dst, origin, 0, WHITE);
+    }
+}
+
+void AsteroidUpdate(void)
+{
+    for (u32 i = 0; i < ASTEROID_LIMIT; i++)
+    {
+        if (!g.asteroid[i].active) continue;
+
+        TimerUpdate(&g.scrap[i].timer);
+        if (TimerCompleted(&g.scrap[i].timer)) {
+            g.asteroid[i].active = false;
+            __LOG("Asteroid (%d) despawn", i);
+        }
+    }
+}
 
 void ScrapDraw(void)
 {
@@ -193,6 +225,8 @@ void GameLoop(void)
 {
     PlayerUpdate();
     ScrapUpdate();
+    ScrapPickup();
+    AsteroidUpdate();
     CameraFollowPlayer();
 
     BeginDrawing();
@@ -200,8 +234,8 @@ void GameLoop(void)
 
         ParalaxDraw();
         BeginMode2D(g.camera);
-            ScrapPickup();
             ScrapDraw();
+            AsteroidDraw();
             PlayerDraw();
         EndMode2D();
 
@@ -210,6 +244,25 @@ void GameLoop(void)
     EndDrawing();
 }
 
+void CreateNewAsteroid(Vector2 pos, MovementParams move)
+{
+    for (u32 i = 0; i < ASTEROID_LIMIT; i++)
+    {
+        if (g.asteroid[i].active) continue;
+        __LOG("Asteroid Created");
+
+        g.asteroid[i] = (Asteroid) {
+            .active = true,
+            .lifetime = InitTimer(ASTEROID_LIFETIME, false),
+            .position = pos,
+            .rotationSpeed = move.rotationSpeed,
+            .velocity = move.velociy,
+            .rotation = 0,
+        };
+
+        break;
+    }
+}
 
 void CreateNewScrap(Vector2 pos, f32 val)
 {
@@ -237,6 +290,7 @@ void GameInit(void)
     a.font = LoadFont("resources/PressStart2P-Regular.ttf");
 
     CreateNewScrap((Vector2) {50, 50}, 20.);
+    CreateNewAsteroid((Vector2) {-80, 80}, (MovementParams) {{10, 5}, 5});
     g.scrap_collected = 20.;
     g.scrap_spent = 0.;
 

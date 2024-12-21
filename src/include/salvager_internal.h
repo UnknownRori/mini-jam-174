@@ -10,7 +10,7 @@
 #include "./utils.h"
 
 #define ASTEROID_LIMIT 100
-#define ASTEROID_LIFETIME 20
+#define ASTEROID_LIFETIME 40
 
 #define SCRAP_LIMIT 512
 #define SCRAP_LIFETIME 15
@@ -38,6 +38,12 @@ typedef struct {
 
     Timer engineBlink;
 } Player;
+
+typedef struct
+{
+    Vector2 velociy;
+    f32 rotationSpeed;
+} MovementParams;
 
 typedef struct {
     Vector2 position;
