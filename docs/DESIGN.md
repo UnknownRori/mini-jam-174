@@ -6,6 +6,8 @@ This is design docs for game about small salvager on deep space.
 
 - Roguelite system (Exp based on collected scrap)
 - Power up / Upgrade for every level up
+- Main Menu
+- Physic
 - Dust cloud / Nebula for environment
 - Minimap
 - Mothership

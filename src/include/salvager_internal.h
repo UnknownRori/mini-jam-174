@@ -40,7 +40,7 @@ typedef struct {
     f32 rotation;
     f32 rotationSpeed;
 
-    f32 collecionRadius;
+    f32 collectionRadius;
     f32 damage;
 
     Timer engineBlink;

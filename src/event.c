@@ -15,3 +15,19 @@ f32 LevelUpRequirement()
 {
     return LEVEL_REQUIREMENT * g.level;
 }
+
+void LevelUpPlayer(LevelType l)
+{
+    g.event = EVENT_NORMAL;
+    g.paused = false;
+    g.level += 1;
+    switch (l) {
+        case LEVEL_UP_COLLECTION_RANGE:
+            g.player.collectionRadius += 20;
+        break;
+        case LEVEL_UP_FAST_FIRE:
+        break;
+        case LEVEL_UP_MULTIPLY_DROP_RATE:
+        break;
+    }
+}

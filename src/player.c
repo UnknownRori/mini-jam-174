@@ -28,6 +28,7 @@ void PlayerDraw(void)
         .y = PLAYER_SPRITE.width / 2.,
     };
     DrawTexturePro(a.spriteAtlas, PLAYER_SPRITE, dst, origin, g.player.rotation, WHITE);
+    DrawCircleV((Vector2){dst.x, dst.y}, g.player.collectionRadius, (Color){255, 0, 0, 128});
 }
 
 void PlayerUpdate(void)

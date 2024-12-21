@@ -75,11 +75,10 @@ void ScrapPickup(void)
         .y = PLAYER_SPRITE.height,
     };
     Vector2 playerPos = Vector2Subtract(g.player.position, Vector2Scale(playerSize, 0.5));
-    DrawCircleV(playerPos, g.player.collecionRadius, (Color){255, 0, 0, 128});
     for (u32 i = 0; i < SCRAP_LIMIT; i++)
     {
         if (g.scrap[i].active) {
-            if (CheckCollisionPointCircle(g.scrap[i].position, playerPos, g.player.collecionRadius)) {
+            if (CheckCollisionPointCircle(g.scrap[i].position, playerPos, g.player.collectionRadius)) {
                 __LOG("Scrap Collected %.0f", g.scrap[i].value);
                 g.scrap_collected += g.scrap[i].value;
                 ScrapRemove(i);

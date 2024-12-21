@@ -131,7 +131,7 @@ void GameInit(void)
         .acceleration = 200,
 
         .damage = 1,
-        .collecionRadius = 32,
+        .collectionRadius = 32,
         .shotCooldown = InitTimer(DEFAULT_COOLDOWN_PLAYER_SHOT, true),
     };
 }
