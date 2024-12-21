@@ -8,6 +8,7 @@ This is design docs for game about small salvager on deep space.
 - Power up / Upgrade for every level up
 - Main Menu
 - Physic
+- Bloom
 - Dust cloud / Nebula for environment
 - Minimap
 - Mothership
