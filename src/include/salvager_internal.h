@@ -9,6 +9,8 @@
 #include "./types.h"
 #include "./utils.h"
 
+#define GAME_VERSION "0.0"
+
 #define ASTEROID_LIMIT 256
 #define ASTEROID_LIFETIME 80
 #define ASTEROID_SPAWN_PADDING 200

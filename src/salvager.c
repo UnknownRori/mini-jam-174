@@ -27,7 +27,20 @@ Game g = {0};
 Assets a = {};
 Config c = {0};
 
+void MainMenuInit(void)
+{
+    PlayMusicStream(a.bgm);
+    SetMusicVolume(a.bgm, c.bgmVolume);
+}
+void MainMenuDraw(void)
+{
 
+}
+
+void MainMenuUpdate(void)
+{
+    UpdateMusicStream(a.bgm);
+}
 
 void UIGameDraw(void)
 {
@@ -44,7 +57,7 @@ void CameraFollowPlayer(void)
 void GameReset()
 {
     PlayMusicStream(a.bgm);
-    SetMusicVolume(a.bgm, 1.);
+    SetMusicVolume(a.bgm, c.bgmVolume);
     SetGenerateAsteroidInterval(InitTimer(0.8, true));
     srand(time(NULL));
 
@@ -107,7 +120,6 @@ void GameSceneDraw()
     }
 
     UIGameDraw();
-    DrawFPS(0, SCREEN_HEIGHT - 24);
 }
 
 void GameSceneUpdate()
@@ -151,6 +163,9 @@ void GameLoop(void)
         ClearBackground(BLACK);
 
         SceneDraw();
+
+        DrawFPS(0, SCREEN_HEIGHT - 24);
+        DrawTextEx(a.font, GAME_VERSION, (Vector2) {SCREEN_WIDTH - 58, SCREEN_HEIGHT - 21}, 14, 4, (Color){255, 255, 255, 128});
     EndDrawing();
 }
 
@@ -170,6 +185,11 @@ void GameInit(void)
     a.bgm = LoadMusicStream("resources/mini-jam-bgm.ogg");
     GameReset();
 
+    SceneAdd(SCENE_MAIN_MENU, (Scene) {
+        .init = MainMenuInit,
+        .draw = MainMenuDraw,
+        .update = MainMenuUpdate,
+    });
     SceneAdd(SCENE_GAME, (Scene) {
         .init = GameSceneInit,
         .draw = GameSceneDraw,

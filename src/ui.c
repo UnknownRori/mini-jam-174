@@ -112,7 +112,7 @@ void PauseSelectUpdate(void)
                 g.paused = false;
                 break;
             case 1:
-                SceneChange(0);
+                SceneChange(SCENE_MAIN_MENU);
                 break;
         }
     }
