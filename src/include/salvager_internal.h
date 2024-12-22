@@ -168,4 +168,6 @@ extern Game g;
 extern Assets a;
 extern Config c;
 
+void Quit();
+
 #endif

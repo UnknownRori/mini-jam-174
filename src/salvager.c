@@ -27,6 +27,18 @@ Game g = {0};
 Assets a = {};
 Config c = {0};
 
+bool gameShouldQuit = false;
+
+void Quit(void)
+{
+    gameShouldQuit = true;
+}
+
+bool ShouldGameQuit()
+{
+    return gameShouldQuit;
+}
+
 void MainMenuInit(void)
 {
     PlayMusicStream(a.bgm);
@@ -34,12 +46,13 @@ void MainMenuInit(void)
 }
 void MainMenuDraw(void)
 {
-
+    MainMenuSelectDraw();
 }
 
 void MainMenuUpdate(void)
 {
     UpdateMusicStream(a.bgm);
+    MainMenuSelectUpdate();
 }
 
 void UIGameDraw(void)
@@ -61,6 +74,9 @@ void GameReset()
     SetGenerateAsteroidInterval(InitTimer(0.8, true));
     srand(time(NULL));
 
+    memset(g.scrap, 0, sizeof(Scrap) * SCRAP_LIMIT);
+    memset(g.asteroid, 0, sizeof(Asteroid) * ASTEROID_LIMIT);
+
     CreateNewScrap((Vector2) {50, 50}, 20.);
     CreateNewAsteroid((Vector2) {-80, 80}, (MovementParams) {{10, 5}, 5}, 4);
     CreateNewAsteroid((Vector2) {-50, 20}, (MovementParams) {{-10, 5}, 5}, 4);
@@ -68,6 +84,7 @@ void GameReset()
     CreateNewAsteroid((Vector2) {-24, 20}, (MovementParams) {{-10, -5}, 5}, 4);
     CreateNewAsteroid((Vector2) {-38, 40}, (MovementParams) {{20, -5}, 5}, 4);
     CreateNewAsteroid((Vector2) {-18, 40}, (MovementParams) {{20, -5}, 5}, 4);
+    g.paused = false;
     g.scrap_collected = 20.;
     g.scrap_spent = 0.;
     g.event = EVENT_NORMAL;
@@ -183,6 +200,8 @@ void GameInit(void)
     a.hit = LoadSound("resources/hit.wav");
     a.explosiveAsteroid = LoadSound("resources/explosive-asteroid.wav");
     a.bgm = LoadMusicStream("resources/mini-jam-bgm.ogg");
+    c.bgmVolume = 0.8;
+    c.sfxVolume = 0.6;
     GameReset();
 
     SceneAdd(SCENE_MAIN_MENU, (Scene) {

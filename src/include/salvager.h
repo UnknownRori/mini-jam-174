@@ -9,5 +9,6 @@
 void GameLoop(void);
 void GameInit(void);
 void GameUnload(void);
+bool ShouldGameQuit(void);
 
 #endif

@@ -16,8 +16,9 @@
 
 #include "./ui.h"
 
-static i32 selectLevelup;
-static i32 selectPauseMenu;
+static i32 selectLevelup = 0;
+static i32 selectPauseMenu = 0;
+static i32 selectMainMenu = 0;
 
 typedef struct 
 {
@@ -125,6 +126,56 @@ void LevelupSelectionUpdate(void)
     if (IsKeyPressed(KEY_DOWN)) selectLevelup+= 1;
     if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_Z)) LevelUpPlayer(selectLevelup);
     CLAMP(selectLevelup, 0, 2);
+}
+
+Color MainMenuSelectButtonColor(i32 currentIndex)
+{
+    if (currentIndex == selectMainMenu) return (Color) {128, 128, 128, 200};
+    return (Color) {64, 64, 64, 200};
+}
+
+void SelectionMainMenuButton(SelectionButton select)
+{
+    SelectionButtonDraw(select, MainMenuSelectButtonColor(select.id));
+}
+
+void MainMenuSelectDraw(void)
+{
+    DrawTextEx(a.font, "Salvager", (Vector2) {280, 80}, 24, 4, WHITE);
+    SelectionMainMenuButton((SelectionButton) {
+        .id = 0,
+        .pos = (Vector2) {0, 200},
+        .text = "Start"
+    });
+    SelectionMainMenuButton((SelectionButton) {
+        .id = 1,
+        .pos = (Vector2) {0, 300},
+        .text = "Options"
+    });
+    SelectionMainMenuButton((SelectionButton) {
+        .id = 2,
+        .pos = (Vector2) {0, 400},
+        .text = "Exit"
+    });
+}
+void MainMenuSelectUpdate(void)
+{
+    if (IsKeyPressed(KEY_UP)) selectMainMenu-= 1;
+    if (IsKeyPressed(KEY_DOWN)) selectMainMenu+= 1;
+    if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_Z)) {
+        switch(selectMainMenu) {
+            case 0:
+                SceneChange(SCENE_GAME);
+                break;
+            case 1:
+                SceneChange(SCENE_OPTION);
+                break;
+            case 2:
+                Quit();
+                break;
+        }
+    }
+    CLAMP(selectMainMenu, 0, 2);
 }
 
 void ResourceDraw(void)

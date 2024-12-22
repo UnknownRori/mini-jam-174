@@ -21,7 +21,8 @@ int main(void)
     SetTargetFPS(60);
     while (!WindowShouldClose())
     {
-      UpdateGame();
+        if (ShouldGameQuit()) break;
+        UpdateGame();
     }
 #endif
 

@@ -17,4 +17,7 @@ void PauseSelectUpdate(void);
 
 void PauseSelectDraw(void);
 
+void MainMenuSelectDraw(void);
+void MainMenuSelectUpdate(void);
+
 #endif
