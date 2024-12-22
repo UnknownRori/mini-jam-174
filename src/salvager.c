@@ -44,8 +44,59 @@ void MainMenuInit(void)
     PlayMusicStream(a.bgm);
     SetMusicVolume(a.bgm, c.bgmVolume);
 }
+
+f32 scrollX = 0.;
+
+void DrawParalaxMainMenu(void)
+{
+    f32 delta = GetFrameTime();
+    f32 scrollSpeed = 200.f;
+    scrollX += scrollSpeed * delta;
+
+    if (scrollX >= SCREEN_WIDTH) scrollX -= SCREEN_WIDTH;
+
+    DrawTexturePro(
+        a.bg, 
+        (Rectangle) {
+            .x = 0, 
+            .y = 0, 
+            .width = a.bg.width, 
+            .height = a.bg.height
+        }, 
+        (Rectangle) {
+            .x = -scrollX,
+            .y = 0,
+            .width = SCREEN_WIDTH,
+            .height = SCREEN_HEIGHT,
+        }, 
+        VECTOR2_ZERO, 
+        0., 
+        WHITE
+    );
+    DrawTexturePro(
+        a.bg, 
+        (Rectangle) {
+            .x = 0, 
+            .y = 0, 
+            .width = a.bg.width, 
+            .height = a.bg.height
+        }, 
+        (Rectangle) {
+            .x = SCREEN_WIDTH - scrollX,
+            .y = 0,
+            .width = SCREEN_WIDTH,
+            .height = SCREEN_HEIGHT,
+        }, 
+        VECTOR2_ZERO, 
+        0., 
+        WHITE
+    );
+}
+
 void MainMenuDraw(void)
 {
+    DrawParalaxMainMenu();
+
     MainMenuSelectDraw();
 }
 
@@ -72,6 +123,7 @@ void GameOptionUpdate(void)
 
 void GameOptionDraw(void)
 {
+    DrawParalaxMainMenu();
     OptionSliderMenuDraw();
 }
 
