@@ -39,6 +39,8 @@ void CreateNewAsteroid(Vector2 pos, MovementParams move, f32 hp)
         if (g.asteroid[i].active) continue;
         __LOG("Asteroid Created");
 
+        Timer timer = InitTimer(2, true);
+        timer.remaining = 0;
         g.asteroid[i] = (Asteroid) {
             .type = rand,
             .active = true,
@@ -50,6 +52,7 @@ void CreateNewAsteroid(Vector2 pos, MovementParams move, f32 hp)
             .rotationSpeed = move.rotationSpeed,
             .velocity = move.velociy,
             .rotation = 0,
+            .playerHitTimer = timer,
             .hp = hp,
         };
 
@@ -151,4 +154,44 @@ void GenerateAsteroid(){
     Vector2 vel = Vector2Scale(Vector2Scale(dir, -1), GetRandomValue(0, 50));
 
     CreateNewAsteroid(randomPoint, (MovementParams) {.velociy = vel, .rotationSpeed = GetRandomValue(0, 360)}, 4);
+}
+
+
+void  AsteroidCollision(void)
+{
+    for (u32 i = 0; i < ASTEROID_LIMIT; i++)
+    {
+        if (!g.asteroid[i].active) continue;
+        Vector2 centerAsteroid = Vector2Subtract(g.asteroid[i].position, (Vector2) {
+            .x = ASTEROID_SPRITE1.width / 2.,
+            .y = ASTEROID_SPRITE1.height / 2.,
+        });
+
+        for (u32 x = i + 1; x < ASTEROID_LIMIT; x++) {
+            if (!g.asteroid[x].active) continue;
+            Vector2 centerAsteroid2 = Vector2Subtract(g.asteroid[x].position, (Vector2) {
+                .x = ASTEROID_SPRITE1.width / 2.,
+                .y = ASTEROID_SPRITE1.height / 2.,
+            });
+
+            if (CheckCollisionCircles(centerAsteroid, g.asteroid[i].hitboxRadius, centerAsteroid2, g.asteroid[x].hitboxRadius)) {
+                g.asteroid[i].velocity = Vector2Add(g.asteroid[i].velocity, Vector2Scale(g.asteroid[x].velocity, 0.2));
+            }
+        }
+
+        Vector2 centerPlayer = Vector2Subtract(g.player.position, (Vector2) {
+            .x = PLAYER_SPRITE.width / 2.,
+            .y = PLAYER_SPRITE.height / 2.,
+        });
+
+
+        if (CheckCollisionCircles(centerAsteroid, g.asteroid[i].hitboxRadius, centerPlayer, g.player.collisionRadius)) {
+            TimerUpdate(&g.asteroid[i].playerHitTimer);
+            g.asteroid[i].velocity = Vector2Add(g.asteroid[i].velocity, Vector2Scale(g.player.velocity, 0.2));
+            g.player.velocity = Vector2Scale(g.player.velocity, 0.95);
+            if (TimerCompleted(&g.asteroid[i].playerHitTimer)) {
+                g.scrap_collected -= 5;
+            }
+        }
+    }
 }

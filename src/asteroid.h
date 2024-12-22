@@ -12,6 +12,8 @@ void CreateNewAsteroid(Vector2 pos, MovementParams move, f32 hp);
 void AsteroidDraw(void);
 void AsteroidUpdate(void);
 
+void AsteroidCollision(void);
+
 void SetGenerateAsteroidInterval(Timer time);
 void GenerateAsteroid(void);
 

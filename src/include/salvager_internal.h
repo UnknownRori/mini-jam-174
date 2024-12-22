@@ -43,6 +43,8 @@ typedef struct {
     f32 rotation;
     f32 rotationSpeed;
 
+    f32 collisionRadius;
+
     f32 collectionRadius;
     f32 damage;
 
@@ -76,6 +78,7 @@ typedef struct {
     f32 scrap;
     f32 hitboxRadius;
     Timer lifetime;
+    Timer playerHitTimer;
     bool active;
 } Asteroid;
 
