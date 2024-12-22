@@ -10,7 +10,6 @@ so feel free to read design docs at docs folder.
 
 ## System Requirement
 
-----------------------------------------
 | Component |   Minimum  | Recommended |
 |-----------|------------|-------------|
 |    CPU    |   2.0 Ghz  |   2.0 Ghz   |
