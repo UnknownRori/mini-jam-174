@@ -44,6 +44,7 @@ void PlayerDraw(void)
     }
 
     if (TimerCompleted(&g.player.hitShaderDelay)) {
+        __LOG("Shader");
         BeginShaderMode(a.hitShader);
         DrawTexturePro(a.spriteAtlas, PLAYER_SPRITE, dst, origin, g.player.rotation, WHITE);
         EndShaderMode();
@@ -57,12 +58,12 @@ void PlayerUpdate(void)
 {
     float delta = GetFrameTime();
 
-    TimerUpdate(&g.player.hitShaderDelay);
     if (TimerCompleted(&g.player.hitShaderDelay)) {
         TimerReset(&g.player.hitShaderDelay);
         g.player.hitShaderDelay.remaining = 0;
         g.player.hitShaderDelay.paused = true;
     }
+    TimerUpdate(&g.player.hitShaderDelay);
 
     if (IsKeyDown(KEY_LEFT)) g.player.rotation -= g.player.rotationSpeed * delta;
     if (IsKeyDown(KEY_RIGHT)) g.player.rotation += g.player.rotationSpeed * delta;
@@ -75,6 +76,7 @@ void PlayerUpdate(void)
         forward = Vector2Scale(forward, g.player.acceleration);
         forward = Vector2Scale(forward, delta);
         g.player.velocity = Vector2Add(forward, g.player.velocity);
+        PlaySound(a.engineLoop);
 
     } else {
         g.player.velocity = Vector2Scale(g.player.velocity, g.player.friction);

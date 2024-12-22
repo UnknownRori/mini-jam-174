@@ -173,6 +173,7 @@ typedef struct {
     Sound pickUp;
     Sound select;
     Sound collideAsteroid;
+    Sound engineLoop;
 
     Music bgm;
 } Assets;
