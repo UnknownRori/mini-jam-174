@@ -13,6 +13,7 @@
 #include "./scrap.h"
 #include "include/logger.h"
 #include "include/timer.h"
+#include "physic.h"
 #include "utils.h"
 
 #include "./asteroid.h"
@@ -175,7 +176,19 @@ void  AsteroidCollision(void)
             });
 
             if (CheckCollisionCircles(centerAsteroid, g.asteroid[i].hitboxRadius, centerAsteroid2, g.asteroid[x].hitboxRadius)) {
-                g.asteroid[i].velocity = Vector2Add(g.asteroid[i].velocity, Vector2Scale(g.asteroid[x].velocity, 0.2));
+                PhysicCircleObject asteroid = (PhysicCircleObject) {
+                    .position = g.asteroid[i].position,
+                    .velocity = g.asteroid[i].velocity,
+                };
+                PhysicCircleObject asteroid2 = (PhysicCircleObject) {
+                    .position = g.asteroid[x].position,
+                    .velocity = g.asteroid[x].velocity,
+                };
+                PushCircleObject(&asteroid, &asteroid2);
+                g.asteroid[i].velocity = asteroid.velocity;
+                g.asteroid[i].position = asteroid.position;
+                g.asteroid[x].velocity = asteroid2.velocity;
+                g.asteroid[x].position = asteroid2.position;
             }
         }
 
@@ -187,10 +200,21 @@ void  AsteroidCollision(void)
 
         if (CheckCollisionCircles(centerAsteroid, g.asteroid[i].hitboxRadius, centerPlayer, g.player.collisionRadius)) {
             TimerUpdate(&g.asteroid[i].playerHitTimer);
-            g.asteroid[i].velocity = Vector2Add(g.asteroid[i].velocity, Vector2Scale(g.player.velocity, 0.2));
-            g.player.velocity = Vector2Scale(g.player.velocity, 0.95);
+            PhysicCircleObject asteroid = (PhysicCircleObject) {
+                .position = g.asteroid[i].position,
+                .velocity = g.asteroid[i].velocity,
+            };
+            PhysicCircleObject player = (PhysicCircleObject) {
+                .position = g.player.position,
+                .velocity = g.player.velocity,
+            };
+            PushCircleObject(&asteroid, &player);
+            g.asteroid[i].velocity = asteroid.velocity;
+            g.asteroid[i].position = asteroid.position;
+            g.player.velocity = player.velocity;
+            g.player.position = player.position;
             if (TimerCompleted(&g.asteroid[i].playerHitTimer)) {
-                g.scrap_collected -= 5;
+                g.scrap_collected -= 0.5;
             }
         }
     }
