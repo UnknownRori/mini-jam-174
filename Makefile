@@ -7,6 +7,10 @@ desktop:
 	([ ! -e ./build ] && cmake $(CMAKE_FLAGS) -S . -B build) || [ -e ./build ]
 	cmake --build build
 	cp -r ./resources/ ./build/
+desktop-release:
+	([ ! -e ./build ] && cmake $(CMAKE_FLAGS) -S . -B build) || [ -e ./build ]
+	cmake --build build --config Release
+	cp -r ./resources/ ./build/
 
 web:
 	([ ! -e ./web-build ] && emcmake cmake -S . -B web-build -DPLATFORM=Web) || [ -e ./web-build ]
