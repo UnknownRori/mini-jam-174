@@ -23,4 +23,7 @@ void MainMenuSelectUpdate(void);
 void OptionSliderMenuUpdate(void);
 void OptionSliderMenuDraw(void);
 
+void GameOverMenuUpdate(void);
+void GameOverMenuDraw(void);
+
 #endif

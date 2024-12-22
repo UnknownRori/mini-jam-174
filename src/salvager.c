@@ -102,7 +102,7 @@ void MainMenuDraw(void)
     f32 speed = 1.;
     f32 offset = 80 + amplitude * sin(speed * time);
     DrawParalaxMainMenu();
-    DrawTextEx(a.font, "Salvager", (Vector2) {240, offset}, 42, 4, WHITE);
+    DrawTextEx(a.font, "Salvager", (Vector2) {220, offset}, 42, 4, WHITE);
 
     MainMenuSelectDraw();
 }
@@ -115,6 +115,12 @@ void MainMenuUpdate(void)
 
 void GameOptionInit(void)
 {
+    g.camera = (Camera2D) {
+        .rotation = 0,
+        .zoom = 1.,
+        .offset = {0, 0},
+        .target = (Vector2){0, 0},
+    };
     PlayMusicStream(a.bgm);
     UpdateMusicStream(a.bgm);
     SetMusicVolume(a.bgm, c.bgmVolume);
@@ -122,7 +128,14 @@ void GameOptionInit(void)
 
 void GameOptionUpdate(void)
 {
+    g.camera = (Camera2D) {
+        .rotation = 0,
+        .zoom = 1.,
+        .offset = {0, 0},
+        .target = (Vector2){0, 0},
+    };
     UpdateMusicStream(a.bgm);
+    CameraShake(&g.camera, &c.shakeness, c.recover);
     if (IsKeyPressed(KEY_ESCAPE)) SceneChange(SCENE_MAIN_MENU);
 
     OptionSliderMenuUpdate();
@@ -130,8 +143,10 @@ void GameOptionUpdate(void)
 
 void GameOptionDraw(void)
 {
-    DrawParalaxMainMenu();
-    OptionSliderMenuDraw();
+    BeginMode2D(g.camera);
+        DrawParalaxMainMenu();
+        OptionSliderMenuDraw();
+    EndMode2D();
 }
 
 void UIGameDraw(void)
@@ -178,6 +193,7 @@ void GameReset()
     g.level = 1;
     g.elapsed = 0;
     c.shakeness = 0.,
+    g.gameOver = false;
     g.multiplier_scrap = 1;
 
     g.paralax[0] = (Paralax) {
@@ -221,31 +237,41 @@ void GameSceneDraw()
         PlayerDraw();
     EndMode2D();
 
-    if (g.paused && g.event == EVENT_NORMAL)
+    UIGameDraw();
+
+    if (g.paused && g.event == EVENT_NORMAL && !g.gameOver)
     {
         DrawRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, (Color) {32, 32, 32, 128});
         PauseSelectDraw();
     } else if (g.paused && g.event == EVENT_LEVEL_UP)
     {
+        DrawRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, (Color) {32, 32, 32, 128});
         LevelupSelectionDraw();
+    } else if (g.paused && g.gameOver) {
+
+        GameOverMenuDraw();
     }
 
-    UIGameDraw();
 }
 
 void GameSceneUpdate()
 {
     UpdateMusicStream(a.bgm);
 
+    if (g.scrap_collected - g.scrap_spent <= 0) {
+        g.gameOver = true;
+        g.paused = true;
+    }
+
     if (g.event == EVENT_NORMAL) {
         if (IsKeyPressed(KEY_ESCAPE)) g.paused = !g.paused;
     }
 
-    EventUpdate();
 
     if (!g.paused)
     {
         g.elapsed += GetFrameTime();
+        EventUpdate();
         PlayerUpdate();
         ScrapUpdate();
         ScrapPickup();
@@ -256,10 +282,12 @@ void GameSceneUpdate()
         AsteroidCollision();
         CameraFollowPlayer();
         CameraShake(&g.camera, &c.shakeness, c.recover);
-    } else if (g.paused && g.event == EVENT_NORMAL) {
+    } else if (g.paused && g.event == EVENT_NORMAL && !g.gameOver) {
         PauseSelectUpdate();
     } else if (g.paused && g.event == EVENT_LEVEL_UP) {
         LevelupSelectionUpdate();
+    } else if (g.paused && g.gameOver) {
+        GameOverMenuUpdate();
     }
 
 }

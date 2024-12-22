@@ -59,7 +59,7 @@ void PlayerUpdate(void)
     float delta = GetFrameTime();
 
     if (TimerCompleted(&g.player.hitShaderDelay)) {
-        c.shakeness += c.shaking;
+        c.shakeness = c.shaking;
         TimerReset(&g.player.hitShaderDelay);
         g.player.hitShaderDelay.remaining = 0;
         g.player.hitShaderDelay.paused = true;

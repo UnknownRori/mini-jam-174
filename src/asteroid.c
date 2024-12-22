@@ -104,7 +104,7 @@ void AsteroidUpdate(void)
         {
             g.asteroid[i].active = false;
             PlaySound(a.explosiveAsteroid);
-            c.shakeness += c.shaking;
+            c.shakeness = c.shaking;
             CreateNewScrap(g.asteroid[i].position, g.asteroid[i].scrap);
             continue;
         }

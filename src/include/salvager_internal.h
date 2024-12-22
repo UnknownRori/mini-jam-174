@@ -142,6 +142,7 @@ typedef struct {
     Camera2D camera;
 
     bool paused;
+    bool gameOver;
     GameScene scene;
     GameEvent event;
 } Game;

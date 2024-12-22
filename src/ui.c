@@ -72,7 +72,7 @@ void SelectionLevelUpButton(SelectionButton select)
 
 void PauseSelectDraw(void)
 {
-    DrawTextEx(a.font, "Game Paused", (Vector2) {160, 80}, 24, 4, WHITE);
+    DrawTextEx(a.font, "Game Paused", (Vector2) {250, 80}, 24, 4, WHITE);
     SelectionPauseButton((SelectionButton) {
         .id = 0,
         .pos = (Vector2) {0, 200},
@@ -250,6 +250,10 @@ void OptionSlider(i32 id, const char *text, Vector2 pos, f32 current, f32 max)
 {
     if (id == selectOption) DrawTextEx(a.font, text, pos, 18, 4, WHITE);
     else  DrawTextEx(a.font, text, pos, 18, 4, (Color) {150, 150, 150, 255});
+
+    char buffer[128] = {0};
+    snprintf(buffer, sizeof(buffer), "%.0f", current * 10);
+    DrawTextEx(a.font, buffer, Vector2Add(pos, (Vector2) {600, 50}), 18, 4, (Color) {150, 150, 150, 255});
     ProgressDraw((Rectangle) {
         .x = 80,
         .y = pos.y + 30,
@@ -263,6 +267,7 @@ void OptionSliderMenuDraw(void)
     DrawTextEx(a.font, "Options", (Vector2) {280, 80}, 24, 4, WHITE);
     OptionSlider(0, "BGM", (Vector2) {40., 150}, c.bgmVolume, 1.);
     OptionSlider(1, "SFX", (Vector2) {40., 250}, c.sfxVolume, 1.);
+    OptionSlider(2, "Screen Shake", (Vector2) {40., 350}, c.shaking, 10.);
 }
 
 void OptionSliderMenuUpdate(void)
@@ -290,6 +295,59 @@ void OptionSliderMenuUpdate(void)
             }
             CLAMP(c.bgmVolume, 0, 1.);
             break;
+        case 2:
+            if (IsKeyPressed(KEY_LEFT)) c.shaking -= 1.;
+            if (IsKeyPressed(KEY_RIGHT)) c.shaking += 1.;
+            if (IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_RIGHT)) {
+                c.shakeness = c.shaking;
+                PlaySound(a.explosiveAsteroid);
+            }
+            CLAMP(c.shaking, 0, 10.);
+            break;
     }
-    CLAMP(selectOption, 0, 1);
+    CLAMP(selectOption, 0, 2);
+}
+
+void GameOverMenuUpdate(void)
+{
+    if (IsKeyPressed(KEY_Z) || IsKeyPressed(KEY_ENTER)) SceneChange(SCENE_MAIN_MENU);
+}
+void GameOverMenuDraw(void)
+{
+    DrawRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, (Color) {0, 0, 0, 200});
+    DrawTextEx(a.font, "Game Over", (Vector2) {200, 150}, 42, 4, WHITE);
+    DrawTextEx(a.font, "Good luck on next attempt", (Vector2) {120, 250}, 18, 4, WHITE);
+    DrawTextEx(a.font, "Press Accept to Continue", (Vector2) {140, 500}, 18, 4, WHITE);
+
+    char buffer[512] = {0};
+    snprintf(buffer, sizeof(buffer), "%.0lf", g.scrap_collected);
+    DrawTextEx(a.font, buffer, (Vector2) {350, 350}, 16, 4, WHITE);
+
+    Time time = CalculateTime(g.elapsed);
+    snprintf(buffer, sizeof(buffer), "%02d:%02d", time.minute, time.seconds);
+    DrawTextEx(a.font, buffer, (Vector2) {350, 400}, 16, 4, WHITE);
+
+    Rectangle dst = (Rectangle) {
+        .x = 300,
+        .y = 350,
+        .width = SCRAP_SPRITE.width + 12,
+        .height = SCRAP_SPRITE.height + 12,
+    };
+    Vector2 origin = (Vector2) {
+        .x = SCRAP_SPRITE.width / 2.,
+        .y = SCRAP_SPRITE.width / 2.,
+    };
+    DrawTexturePro(a.spriteAtlas, SCRAP_SPRITE, dst, origin, 0, WHITE);
+
+    dst = (Rectangle) {
+        .x = 300,
+        .y = 400,
+        .width = TIME_SPRITE.width + 12,
+        .height = TIME_SPRITE.height + 12,
+    };
+    origin = (Vector2) {
+        .x = TIME_SPRITE.width / 2.,
+        .y = TIME_SPRITE.width / 2.,
+    };
+    DrawTexturePro(a.spriteAtlas, TIME_SPRITE, dst, origin, 0, WHITE);
 }
