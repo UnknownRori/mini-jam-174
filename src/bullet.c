@@ -80,6 +80,7 @@ void BulletPlayerCollisionWithAsteroid(void)
             {
                 __LOG("Hit");
                 PlaySound(a.hit);
+                g.asteroid[ai].hitShaderDelay.paused = false;
                 g.playerBullet[bi].active = false;
                 g.asteroid[ai].hp -= g.playerBullet[bi].damage;
             }

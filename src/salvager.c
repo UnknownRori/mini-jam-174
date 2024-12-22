@@ -188,6 +188,9 @@ void GameReset()
         .offset = (Vector2){SCREEN_WIDTH / 2., SCREEN_HEIGHT / 2.},
         .target = (Vector2){0, 0},
     };
+    Timer hitTimer = InitTimer(0.4, true);
+    hitTimer.remaining = 0;
+    hitTimer.paused = true;
     g.player = (Player) {
         .rotation = 0,
         .rotationSpeed = 250,
@@ -201,6 +204,7 @@ void GameReset()
         .collectionRadius = 32,
         .shotCooldown = InitTimer(DEFAULT_COOLDOWN_PLAYER_SHOT, true),
         .engineBlink = InitTimer(PLAYER_BURN_BLINK, true),
+        .hitShaderDelay = hitTimer,
     };
 }
 
@@ -291,6 +295,7 @@ void GameInit(void)
     a.select = LoadSound("resources/select.wav");
     a.collideAsteroid = LoadSound("resources/collide-asteroid.wav");
     a.bgm = LoadMusicStream("resources/mini-jam-bgm.ogg");
+    a.hitShader = LoadShader(0, "resources/hit.fs");
     c.bgmVolume = 0.8;
     c.sfxVolume = 0.6;
     GameReset();

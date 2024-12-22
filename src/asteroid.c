@@ -42,6 +42,9 @@ void CreateNewAsteroid(Vector2 pos, MovementParams move, f32 hp)
 
         Timer timer = InitTimer(2, true);
         timer.remaining = 0;
+        Timer hitTimer = InitTimer(0.4, true);
+        hitTimer.paused = true;
+        hitTimer.remaining = 0;
         g.asteroid[i] = (Asteroid) {
             .type = rand,
             .active = true,
@@ -54,6 +57,7 @@ void CreateNewAsteroid(Vector2 pos, MovementParams move, f32 hp)
             .velocity = move.velociy,
             .rotation = 0,
             .playerHitTimer = timer,
+            .hitShaderDelay = hitTimer,
             .hp = hp,
         };
 
@@ -78,7 +82,13 @@ void AsteroidDraw(void)
             .x = g.asteroid[i].sprite.width / 2.,
             .y = g.asteroid[i].sprite.width / 2.,
         };
-        DrawTexturePro(a.spriteAtlas, g.asteroid[i].sprite, dst, origin, g.asteroid[i].rotation, WHITE);
+        if (TimerCompleted(&g.asteroid[i].hitShaderDelay)) {
+            BeginShaderMode(a.hitShader);
+            DrawTexturePro(a.spriteAtlas, g.asteroid[i].sprite, dst, origin, g.asteroid[i].rotation, WHITE);
+            EndShaderMode();
+        } else {
+            DrawTexturePro(a.spriteAtlas, g.asteroid[i].sprite, dst, origin, g.asteroid[i].rotation, WHITE);
+        }
         /*DrawCircleV((Vector2) {dst.x, dst.y}, g.asteroid[i].hitboxRadius, (Color) {255, 0, 0, 128});*/
     }
 }
@@ -108,6 +118,13 @@ void AsteroidUpdate(void)
             .height = g.asteroid[i].sprite.height,
         };
 
+        if (TimerCompleted(&g.asteroid[i].hitShaderDelay)) {
+            TimerReset(&g.asteroid[i].hitShaderDelay);
+            g.asteroid[i].hitShaderDelay.remaining = 0;
+            g.asteroid[i].hitShaderDelay.paused = true;
+        }
+
+        TimerUpdate(&g.asteroid[i].hitShaderDelay);
         if (CheckIfInGameSpace(asteroidRect, g.camera, SCREEN_WIDTH, SCREEN_HEIGHT))
         {
             TimerUpdate(&g.asteroid[i].lifetime);
@@ -213,6 +230,7 @@ void  AsteroidCollision(void)
             g.asteroid[i].position = asteroid.position;
             g.player.velocity = player.velocity;
             g.player.position = player.position;
+            g.player.hitShaderDelay.paused = false;
             if (TimerCompleted(&g.asteroid[i].playerHitTimer)) {
                 g.scrap_collected -= 0.5;
                 PlaySound(a.collideAsteroid);

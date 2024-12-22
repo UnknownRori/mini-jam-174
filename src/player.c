@@ -42,13 +42,27 @@ void PlayerDraw(void)
         Vector2 engineExhaustOrigin = (Vector2) {.x = ENGINE_EXHAUST_SPRITE.width / 2., .y = ENGINE_EXHAUST_SPRITE.height / 2.};
         DrawTexturePro(a.spriteAtlas, ENGINE_EXHAUST_SPRITE, engineExhaust, engineExhaustOrigin, g.player.rotation, WHITE);
     }
-    DrawTexturePro(a.spriteAtlas, PLAYER_SPRITE, dst, origin, g.player.rotation, WHITE);
+
+    if (TimerCompleted(&g.player.hitShaderDelay)) {
+        BeginShaderMode(a.hitShader);
+        DrawTexturePro(a.spriteAtlas, PLAYER_SPRITE, dst, origin, g.player.rotation, WHITE);
+        EndShaderMode();
+    } else {
+        DrawTexturePro(a.spriteAtlas, PLAYER_SPRITE, dst, origin, g.player.rotation, WHITE);
+    }
     /*DrawCircleV((Vector2){dst.x, dst.y}, g.player.collectionRadius, (Color){255, 0, 0, 128});*/
 }
 
 void PlayerUpdate(void)
 {
     float delta = GetFrameTime();
+
+    TimerUpdate(&g.player.hitShaderDelay);
+    if (TimerCompleted(&g.player.hitShaderDelay)) {
+        TimerReset(&g.player.hitShaderDelay);
+        g.player.hitShaderDelay.remaining = 0;
+        g.player.hitShaderDelay.paused = true;
+    }
 
     if (IsKeyDown(KEY_LEFT)) g.player.rotation -= g.player.rotationSpeed * delta;
     if (IsKeyDown(KEY_RIGHT)) g.player.rotation += g.player.rotationSpeed * delta;

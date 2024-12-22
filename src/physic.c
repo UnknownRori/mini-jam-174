@@ -4,7 +4,6 @@
 void PushCircleObject(PhysicCircleObject *a, PhysicCircleObject *b)
 {
     Vector2 delta = Vector2Subtract(b->position, a->position);
-    f32 dist = Vector2Length(delta);
     Vector2 collisionNormal = Vector2Normalize(delta);
     a->position = Vector2Subtract(a->position, collisionNormal);
     b->position = Vector2Add(b->position, collisionNormal);

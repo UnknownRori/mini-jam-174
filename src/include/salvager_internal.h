@@ -50,6 +50,7 @@ typedef struct {
     f32 collectionRadius;
     f32 damage;
 
+    Timer hitShaderDelay;
     Timer engineBlink;
     Timer shotCooldown;
 } Player;
@@ -80,6 +81,7 @@ typedef struct {
     f32 scrap;
     f32 hitboxRadius;
     Timer lifetime;
+    Timer hitShaderDelay;
     Timer playerHitTimer;
     bool active;
 } Asteroid;
@@ -160,6 +162,8 @@ typedef struct {
 typedef struct {
     Texture2D spriteAtlas;
     Texture2D bg;
+
+    Shader hitShader;
 
     Font font;
 
