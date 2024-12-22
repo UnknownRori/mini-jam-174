@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <math.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "./include/salvager.h"
@@ -114,5 +115,40 @@ void AsteroidUpdate(void)
     }
 }
 
-void SetGenerateAsteroidInterval(Timer time){}
-void GenerateAsteroid(){}
+void SetGenerateAsteroidInterval(Timer time){
+    interval = time;
+}
+
+void GenerateAsteroid(){
+    TimerUpdate(&interval);
+    if (!TimerCompleted(&interval)) return;
+    int region = GetRandomValue(0, 3);
+    Rectangle rect = GetCameraBounds(g.camera, SCREEN_WIDTH, SCREEN_HEIGHT);
+    Vector2 randomPoint;
+    float buffer = ASTEROID_SPAWN_PADDING;
+    switch (region) {
+        case 0: // Left of the rectangle
+            randomPoint.x = GetRandomValue(rect.x - buffer, rect.x - 1);
+            randomPoint.y = GetRandomValue(rect.y - buffer, rect.y + rect.height + buffer);
+            break;
+        case 1: // Right of the rectangle
+            randomPoint.x = GetRandomValue(rect.x + rect.width + 1, rect.x + rect.width + buffer);
+            randomPoint.y = GetRandomValue(rect.y - buffer, rect.y + rect.height + buffer);
+            break;
+        case 2: // Above the rectangle
+            randomPoint.x = GetRandomValue(rect.x - buffer, rect.x + rect.width + buffer);
+            randomPoint.y = GetRandomValue(rect.y - buffer, rect.y - 1);
+            break;
+        case 3: // Below the rectangle
+            randomPoint.x = GetRandomValue(rect.x - buffer, rect.x + rect.width + buffer);
+            randomPoint.y = GetRandomValue(rect.y + rect.height + 1, rect.y + rect.height + buffer);
+            break;
+    }
+    Vector2 dir = Vector2Subtract(randomPoint, g.player.position);
+    if (Vector2Length(dir) > 0) {
+        dir = Vector2Normalize(dir);
+    }
+    Vector2 vel = Vector2Scale(Vector2Scale(dir, -1), GetRandomValue(0, 50));
+
+    CreateNewAsteroid(randomPoint, (MovementParams) {.velociy = vel, .rotationSpeed = GetRandomValue(0, 360)}, 4);
+}

@@ -3,7 +3,9 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <math.h>
+#include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #include "./include/salvager.h"
 #include "./include/salvager_internal.h"
@@ -105,6 +107,8 @@ void GameInit(void)
     a.bgm = LoadMusicStream("resources/mini-jam-bgm.ogg");
     PlayMusicStream(a.bgm);
     SetMusicVolume(a.bgm, 1.);
+    SetGenerateAsteroidInterval(InitTimer(0.8, true));
+    srand(time(NULL));
 
     CreateNewScrap((Vector2) {50, 50}, 20.);
     CreateNewAsteroid((Vector2) {-80, 80}, (MovementParams) {{10, 5}, 5}, 4);

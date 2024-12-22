@@ -9,8 +9,9 @@
 #include "./types.h"
 #include "./utils.h"
 
-#define ASTEROID_LIMIT 100
+#define ASTEROID_LIMIT 256
 #define ASTEROID_LIFETIME 80
+#define ASTEROID_SPAWN_PADDING 200
 
 #define SCRAP_LIMIT 512
 #define SCRAP_LIFETIME 30

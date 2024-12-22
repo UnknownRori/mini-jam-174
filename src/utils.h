@@ -8,5 +8,6 @@
 #include "./include/types.h"
 
 bool CheckIfInGameSpace(Rectangle, Camera2D, f32 screenWidth, f32 screenHeight);
+Rectangle GetCameraBounds(Camera2D, f32 screenWidth, f32 screenHeight);
 
 #endif

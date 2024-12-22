@@ -13,3 +13,18 @@ bool CheckIfInGameSpace(Rectangle obj, Camera2D c, f32 screenWidth, f32 screenHe
 
     return !CheckCollisionRecs(camRect, obj);
 }
+
+Rectangle GetCameraBounds(Camera2D c, f32 screenWidth, f32 screenHeight)
+{
+    Rectangle bounds;
+
+    f32 halfWidth = (screenWidth / 2.) / c.zoom;
+    f32 halfHeight = (screenHeight / 2.) / c.zoom;
+
+    bounds.x = c.target.x - halfWidth;
+    bounds.y = c.target.x - halfHeight;
+    bounds.width = halfWidth * 2.;
+    bounds.height = halfHeight * 2.;
+
+    return bounds;
+}
