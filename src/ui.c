@@ -19,6 +19,7 @@
 static i32 selectLevelup = 0;
 static i32 selectPauseMenu = 0;
 static i32 selectMainMenu = 0;
+static i32 selectOption = 0;
 
 typedef struct 
 {
@@ -212,4 +213,51 @@ void ProgressDraw(Rectangle size, f32 current, f32 max, Color active, Color deac
         .width = activeWidth, 
         .height = size.height
     }, active);
+}
+
+void OptionSlider(i32 id, const char *text, Vector2 pos, f32 current, f32 max)
+{
+    if (id == selectOption) DrawTextEx(a.font, text, pos, 18, 4, WHITE);
+    else  DrawTextEx(a.font, text, pos, 18, 4, (Color) {150, 150, 150, 255});
+    ProgressDraw((Rectangle) {
+        .x = 80,
+        .y = pos.y + 30,
+        .width = SCREEN_WIDTH * 0.8,
+        .height = 20,
+    }, current, max, WHITE, (Color) {128, 128, 128, 255});
+}
+
+void OptionSliderMenuDraw(void)
+{
+    DrawTextEx(a.font, "Options", (Vector2) {280, 80}, 24, 4, WHITE);
+    OptionSlider(0, "BGM", (Vector2) {40., 150}, c.bgmVolume, 1.);
+    OptionSlider(1, "SFX", (Vector2) {40., 250}, c.sfxVolume, 1.);
+}
+
+void OptionSliderMenuUpdate(void)
+{
+    if (IsKeyPressed(KEY_UP)) selectOption -= 1;
+    if (IsKeyPressed(KEY_DOWN)) selectOption += 1;
+    switch(selectOption) {
+        case 0:
+            if (IsKeyPressed(KEY_LEFT)) c.bgmVolume -= 0.1;
+            if (IsKeyPressed(KEY_RIGHT)) c.bgmVolume += 0.1;
+            if (IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_RIGHT)) {
+                SetSoundVolume(a.explosiveAsteroid, c.bgmVolume);
+                SetMusicVolume(a.bgm, c.bgmVolume);
+                PlaySound(a.explosiveAsteroid);
+            }
+            CLAMP(c.bgmVolume, 0, 1.);
+            break;
+        case 1:
+            if (IsKeyPressed(KEY_LEFT)) c.sfxVolume -= 0.1;
+            if (IsKeyPressed(KEY_RIGHT)) c.sfxVolume += 0.1;
+            if (IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_RIGHT)) {
+                SetSoundVolume(a.explosiveAsteroid, c.sfxVolume);
+                PlaySound(a.explosiveAsteroid);
+            }
+            CLAMP(c.bgmVolume, 0, 1.);
+            break;
+    }
+    CLAMP(selectOption, 0, 1);
 }

@@ -20,4 +20,7 @@ void PauseSelectDraw(void);
 void MainMenuSelectDraw(void);
 void MainMenuSelectUpdate(void);
 
+void OptionSliderMenuUpdate(void);
+void OptionSliderMenuDraw(void);
+
 #endif

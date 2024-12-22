@@ -55,6 +55,26 @@ void MainMenuUpdate(void)
     MainMenuSelectUpdate();
 }
 
+void GameOptionInit(void)
+{
+    PlayMusicStream(a.bgm);
+    UpdateMusicStream(a.bgm);
+    SetMusicVolume(a.bgm, c.bgmVolume);
+}
+
+void GameOptionUpdate(void)
+{
+    UpdateMusicStream(a.bgm);
+    if (IsKeyPressed(KEY_ESCAPE)) SceneChange(SCENE_MAIN_MENU);
+
+    OptionSliderMenuUpdate();
+}
+
+void GameOptionDraw(void)
+{
+    OptionSliderMenuDraw();
+}
+
 void UIGameDraw(void)
 {
     ResourceDraw();
@@ -71,6 +91,10 @@ void GameReset()
 {
     PlayMusicStream(a.bgm);
     SetMusicVolume(a.bgm, c.bgmVolume);
+    SetSoundVolume(a.explosiveAsteroid, c.sfxVolume);
+    SetSoundVolume(a.hit, c.sfxVolume);
+    SetSoundVolume(a.pickUp, c.sfxVolume);
+    SetSoundVolume(a.playerShot, c.sfxVolume);
     SetGenerateAsteroidInterval(InitTimer(0.8, true));
     srand(time(NULL));
 
@@ -209,12 +233,17 @@ void GameInit(void)
         .draw = MainMenuDraw,
         .update = MainMenuUpdate,
     });
+    SceneAdd(SCENE_OPTION, (Scene) {
+        .init = GameOptionInit,
+        .draw = GameOptionDraw,
+        .update = GameOptionUpdate,
+    });
     SceneAdd(SCENE_GAME, (Scene) {
         .init = GameSceneInit,
         .draw = GameSceneDraw,
         .update = GameSceneUpdate,
     });
-    SceneChange(SCENE_GAME);
+    SceneChange(SCENE_MAIN_MENU);
 }
 void GameUnload(void)
 {
