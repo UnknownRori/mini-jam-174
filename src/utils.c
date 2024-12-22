@@ -2,6 +2,14 @@
 #include <raylib.h>
 
 
+Time CalculateTime(f32 time)
+{
+    return (Time) {
+        .minute = time / 60,
+        .seconds = (int)time % 60
+    };
+}
+
 bool CheckIfInGameSpace(Rectangle obj, Camera2D c, f32 screenWidth, f32 screenHeight)
 {
     Rectangle camRect = (Rectangle){

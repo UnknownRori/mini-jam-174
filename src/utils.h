@@ -7,7 +7,15 @@
 #include <stdbool.h>
 #include "./include/types.h"
 
+typedef struct
+{
+    i32 minute;
+    i32 seconds;
+} Time;
+
 bool CheckIfInGameSpace(Rectangle, Camera2D, f32 screenWidth, f32 screenHeight);
 Rectangle GetCameraBounds(Camera2D, f32 screenWidth, f32 screenHeight);
+
+Time CalculateTime(f32);
 
 #endif

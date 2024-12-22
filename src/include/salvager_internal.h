@@ -134,6 +134,7 @@ typedef struct {
     f32 scrap_spent;
     u32 level;
     f32 multiplier_scrap;
+    f32 elapsed;
     Paralax paralax[PARALAX_LIMIT];
 
     Camera2D camera;
@@ -151,6 +152,7 @@ typedef struct {
 #define PLAYER_SPRITE ((Rectangle) {0., 0., 32., 32.})
 #define ENGINE_EXHAUST_SPRITE ((Rectangle) {160., 0., 32., 32.})
 #define SCRAP_SPRITE ((Rectangle) {192., 0., 32., 32.})
+#define TIME_SPRITE ((Rectangle) {224., 0., 32., 32.})
 #define ASTEROID_SPRITE1 ((Rectangle) {0., 64., 32., 32.})
 #define ASTEROID_SPRITE2 ((Rectangle) {32., 64., 32., 32.})
 #define PLAYER_BULLET_SPRITE ((Rectangle) {128., 0., 32., 32.})
@@ -165,6 +167,7 @@ typedef struct {
     Sound hit;
     Sound explosiveAsteroid;
     Sound pickUp;
+    Sound select;
 
     Music bgm;
 } Assets;

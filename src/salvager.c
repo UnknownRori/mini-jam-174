@@ -95,7 +95,12 @@ void DrawParalaxMainMenu(void)
 
 void MainMenuDraw(void)
 {
+    f32 time = GetTime();
+    f32 amplitude = 10.;
+    f32 speed = 1.;
+    f32 offset = 80 + amplitude * sin(speed * time);
     DrawParalaxMainMenu();
+    DrawTextEx(a.font, "Salvager", (Vector2) {240, offset}, 42, 4, WHITE);
 
     MainMenuSelectDraw();
 }
@@ -147,6 +152,7 @@ void GameReset()
     SetSoundVolume(a.hit, c.sfxVolume);
     SetSoundVolume(a.pickUp, c.sfxVolume);
     SetSoundVolume(a.playerShot, c.sfxVolume);
+    SetSoundVolume(a.select, c.sfxVolume);
     SetGenerateAsteroidInterval(InitTimer(0.8, true));
     srand(time(NULL));
 
@@ -166,6 +172,7 @@ void GameReset()
     g.event = EVENT_NORMAL;
     g.scene = SCENE_GAME;
     g.level = 1;
+    g.elapsed = 0;
     g.multiplier_scrap = 1;
 
     g.paralax[0] = (Paralax) {
@@ -229,6 +236,7 @@ void GameSceneUpdate()
 
     if (!g.paused)
     {
+        g.elapsed += GetFrameTime();
         PlayerUpdate();
         ScrapUpdate();
         ScrapPickup();
@@ -278,6 +286,7 @@ void GameInit(void)
     a.pickUp = LoadSound("resources/pickup.wav");
     a.hit = LoadSound("resources/hit.wav");
     a.explosiveAsteroid = LoadSound("resources/explosive-asteroid.wav");
+    a.select = LoadSound("resources/select.wav");
     a.bgm = LoadMusicStream("resources/mini-jam-bgm.ogg");
     c.bgmVolume = 0.8;
     c.sfxVolume = 0.6;
@@ -309,4 +318,5 @@ void GameUnload(void)
     UnloadSound(a.hit);
     UnloadSound(a.explosiveAsteroid);
     UnloadSound(a.pickUp);
+    UnloadSound(a.select);
 }

@@ -13,6 +13,7 @@
 #include "include/logger.h"
 #include "include/timer.h"
 #include "scene.h"
+#include "utils.h"
 
 #include "./ui.h"
 
@@ -108,6 +109,7 @@ void PauseSelectUpdate(void)
 {
     if (IsKeyPressed(KEY_UP)) selectPauseMenu-= 1;
     if (IsKeyPressed(KEY_DOWN)) selectPauseMenu+= 1;
+    if (IsKeyPressed(KEY_ENTER) || IsKeyReleased(KEY_Z) || IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_DOWN)) PlaySound(a.select);
     if (IsKeyPressed(KEY_ENTER) || IsKeyReleased(KEY_Z)) {
         switch (selectPauseMenu) {
             case 0:
@@ -126,6 +128,7 @@ void LevelupSelectionUpdate(void)
     if (IsKeyPressed(KEY_UP)) selectLevelup-= 1;
     if (IsKeyPressed(KEY_DOWN)) selectLevelup+= 1;
     if (IsKeyPressed(KEY_ENTER) || IsKeyReleased(KEY_Z)) LevelUpPlayer(selectLevelup);
+    if (IsKeyPressed(KEY_ENTER) || IsKeyReleased(KEY_Z) || IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_DOWN)) PlaySound(a.select);
     CLAMP(selectLevelup, 0, 2);
 }
 
@@ -142,7 +145,6 @@ void SelectionMainMenuButton(SelectionButton select)
 
 void MainMenuSelectDraw(void)
 {
-    DrawTextEx(a.font, "Salvager", (Vector2) {280, 80}, 24, 4, WHITE);
     SelectionMainMenuButton((SelectionButton) {
         .id = 0,
         .pos = (Vector2) {0, 200},
@@ -163,6 +165,7 @@ void MainMenuSelectUpdate(void)
 {
     if (IsKeyPressed(KEY_UP)) selectMainMenu-= 1;
     if (IsKeyPressed(KEY_DOWN)) selectMainMenu+= 1;
+    if (IsKeyPressed(KEY_ENTER) || IsKeyReleased(KEY_Z) || IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_DOWN)) PlaySound(a.select);
     if (IsKeyPressed(KEY_ENTER) || IsKeyReleased(KEY_Z)) {
         switch(selectMainMenu) {
             case 0:
@@ -193,10 +196,26 @@ void ResourceDraw(void)
     };
     DrawTexturePro(a.spriteAtlas, SCRAP_SPRITE, dst, origin, 0, WHITE);
 
+    dst = (Rectangle) {
+        .x = 18,
+        .y = 64,
+        .width = TIME_SPRITE.width + 12,
+        .height = TIME_SPRITE.height + 12,
+    };
+    origin = (Vector2) {
+        .x = TIME_SPRITE.width / 2.,
+        .y = TIME_SPRITE.width / 2.,
+    };
+    DrawTexturePro(a.spriteAtlas, TIME_SPRITE, dst, origin, 0, WHITE);
+
     char buffer[512] ={0};
     snprintf(buffer, sizeof(buffer), "%.0lf", g.scrap_collected - g.scrap_spent);
 
     DrawTextEx(a.font, buffer, (Vector2) {SCRAP_SPRITE.width + 24, SCRAP_SPRITE.height / 2. + 12}, 24, 4, WHITE);
+
+    Time time = CalculateTime(g.elapsed);
+    snprintf(buffer, sizeof(buffer), "%02d:%02d", time.minute, time.seconds);
+    DrawTextEx(a.font, buffer, (Vector2) {32 + 24, 64}, 24, 4, WHITE);
 }
 
 void ProgressDraw(Rectangle size, f32 current, f32 max, Color active, Color deactive)
@@ -238,6 +257,7 @@ void OptionSliderMenuUpdate(void)
 {
     if (IsKeyPressed(KEY_UP)) selectOption -= 1;
     if (IsKeyPressed(KEY_DOWN)) selectOption += 1;
+    if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_DOWN)) PlaySound(a.select);
     switch(selectOption) {
         case 0:
             if (IsKeyPressed(KEY_LEFT)) c.bgmVolume -= 0.1;
