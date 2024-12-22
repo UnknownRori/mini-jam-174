@@ -31,6 +31,8 @@
 #define LEVEL_REQUIREMENT 100
 #define LEVEL_MULTIPLIER 2
 
+#define PLAYER_BURN_BLINK 0.05
+
 typedef struct {
     Vector2 position;
     Vector2 velocity;

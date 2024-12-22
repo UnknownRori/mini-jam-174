@@ -27,6 +27,21 @@ void PlayerDraw(void)
         .x = PLAYER_SPRITE.width / 2.,
         .y = PLAYER_SPRITE.width / 2.,
     };
+
+    TimerUpdate(&g.player.engineBlink);
+    if (TimerCompleted(&g.player.engineBlink) && IsKeyDown(KEY_UP)) {
+        f32 rotationRadians = (g.player.rotation - 90) * DEG2RAD;
+        float exhaustOffsetX = -cos(rotationRadians) * (PLAYER_SPRITE.height / 2. + ENGINE_EXHAUST_SPRITE.height / 2.) * 0.4;
+        float exhaustOffsetY = -sin(rotationRadians) * (PLAYER_SPRITE.height / 2. + ENGINE_EXHAUST_SPRITE.height / 2.) * 0.4;
+        Rectangle engineExhaust = (Rectangle) {
+            .x = g.player.position.x + exhaustOffsetX - ENGINE_EXHAUST_SPRITE.width / 2.,
+            .y = g.player.position.y + exhaustOffsetY - ENGINE_EXHAUST_SPRITE.height / 2.,
+            .width = ENGINE_EXHAUST_SPRITE.width,
+            .height = ENGINE_EXHAUST_SPRITE.height,
+        };
+        Vector2 engineExhaustOrigin = (Vector2) {.x = ENGINE_EXHAUST_SPRITE.width / 2., .y = ENGINE_EXHAUST_SPRITE.height / 2.};
+        DrawTexturePro(a.spriteAtlas, ENGINE_EXHAUST_SPRITE, engineExhaust, engineExhaustOrigin, g.player.rotation, WHITE);
+    }
     DrawTexturePro(a.spriteAtlas, PLAYER_SPRITE, dst, origin, g.player.rotation, WHITE);
     /*DrawCircleV((Vector2){dst.x, dst.y}, g.player.collectionRadius, (Color){255, 0, 0, 128});*/
 }
@@ -46,6 +61,7 @@ void PlayerUpdate(void)
         forward = Vector2Scale(forward, g.player.acceleration);
         forward = Vector2Scale(forward, delta);
         g.player.velocity = Vector2Add(forward, g.player.velocity);
+
     } else {
         g.player.velocity = Vector2Scale(g.player.velocity, g.player.friction);
     }

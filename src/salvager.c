@@ -139,6 +139,7 @@ void GameReset()
         .damage = 1,
         .collectionRadius = 32,
         .shotCooldown = InitTimer(DEFAULT_COOLDOWN_PLAYER_SHOT, true),
+        .engineBlink = InitTimer(PLAYER_BURN_BLINK, true),
     };
 }
 
