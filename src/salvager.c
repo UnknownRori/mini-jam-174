@@ -152,7 +152,11 @@ void GameOptionDraw(void)
 void UIGameDraw(void)
 {
     ResourceDraw();
-    ProgressDraw((Rectangle) {0, 0, SCREEN_WIDTH, 15}, g.scrap_collected, LevelUpRequirement(), GREEN, (Color) {255, 255, 255, 32});
+    Color color = GREEN;
+    if (TimerCompleted(&g.player.hitShaderDelay)) {
+        color = (Color){255, 0, 0, 255};
+    }
+    ProgressDraw((Rectangle) {0, 0, SCREEN_WIDTH, 15}, g.scrap_collected, LevelUpRequirement(), color, (Color) {255, 255, 255, 32});
 }
 
 

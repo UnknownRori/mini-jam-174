@@ -231,8 +231,8 @@ void  AsteroidCollision(void)
             g.asteroid[i].position = asteroid.position;
             g.player.velocity = player.velocity;
             g.player.position = player.position;
-            g.player.hitShaderDelay.paused = false;
             if (TimerCompleted(&g.asteroid[i].playerHitTimer)) {
+                g.player.hitShaderDelay.paused = false;
                 g.scrap_collected -= 0.5;
                 PlaySound(a.collideAsteroid);
             }
