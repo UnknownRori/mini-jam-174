@@ -262,12 +262,34 @@ void OptionSlider(i32 id, const char *text, Vector2 pos, f32 current, f32 max)
     }, current, max, WHITE, (Color) {128, 128, 128, 255});
 }
 
+void ToggleButton(const char *text, Vector2 pos, bool shouldActive, Color active, Color deactive)
+{
+    if (shouldActive) 
+        DrawTextEx(a.font, text, pos, 18, 4, WHITE);
+    else
+        DrawTextEx(a.font, text, pos, 18, 4, deactive);
+
+    if (!c.fullscreen) {
+        DrawRectangle(40, pos.y, 20, 20, WHITE);
+        DrawRectangle(43, pos.y + 2, 15, 15, deactive);
+    } else {
+        DrawRectangle(40, pos.y, 20, 20, WHITE);
+    }
+    
+}
+
+void ToggleButtonOption(u32 id, const char *text, Vector2 pos)
+{
+    ToggleButton(text, pos, selectOption == id, (Color) {255, 255, 255, 255}, (Color) {150,150,150, 255});
+}
+
 void OptionSliderMenuDraw(void)
 {
     DrawTextEx(a.font, "Options", (Vector2) {280, 80}, 24, 4, WHITE);
-    OptionSlider(0, "BGM", (Vector2) {40., 150}, c.bgmVolume, 1.);
-    OptionSlider(1, "SFX", (Vector2) {40., 250}, c.sfxVolume, 1.);
-    OptionSlider(2, "Screen Shake", (Vector2) {40., 350}, c.shaking, 10.);
+    OptionSlider(0, "BGM", (Vector2) {70., 150}, c.bgmVolume, 1.);
+    OptionSlider(1, "SFX", (Vector2) {70., 250}, c.sfxVolume, 1.);
+    OptionSlider(2, "Screen Shake", (Vector2) {70., 350}, c.shaking, 10.);
+    ToggleButtonOption(3, "Fullscreen", (Vector2){70., 450});
 }
 
 void OptionSliderMenuUpdate(void)
@@ -304,8 +326,14 @@ void OptionSliderMenuUpdate(void)
             }
             CLAMP(c.shaking, 0, 10.);
             break;
+        case 3:
+            if (IsKeyPressed(KEY_Z) || IsKeyPressed(KEY_ENTER)) {
+                c.fullscreen = !c.fullscreen;
+                ToggleFullscreen();
+            }
+            break;
     }
-    CLAMP(selectOption, 0, 2);
+    CLAMP(selectOption, 0, 3);
 }
 
 void GameOverMenuUpdate(void)

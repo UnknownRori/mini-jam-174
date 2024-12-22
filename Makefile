@@ -13,7 +13,8 @@ web:
 	([ ! -e ./dist ] && mkdir dist) || [ -e ./dist ]
 	cmake --build web-build
 	cp -r ./resources ./dist
-	cp ./web-build/salvager.html ./dist/index.html
+	# cp ./web-build/salvager.html ./dist/index.html
+	cp ./index.html ./dist/index.html
 	cp ./web-build/salvager.js ./dist
 	cp ./web-build/salvager.data ./dist
 	cp ./web-build/salvager.wasm ./dist

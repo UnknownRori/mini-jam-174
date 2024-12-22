@@ -338,6 +338,7 @@ void GameInit(void)
     c.shakeness = 0.,
     c.recover = 0.5,
     c.shaking = 1.;
+    c.fullscreen = FULLSCREEN;
     GameReset();
 
     SceneInit(InitTimer(0.4, false));

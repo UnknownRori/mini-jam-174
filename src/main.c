@@ -11,6 +11,9 @@ void UpdateGame(void);
 int main(void)
 {
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Salvager");
+    if (FULLSCREEN) {
+        ToggleFullscreen();
+    }
 
     InitAudioDevice();
     GameInit();

@@ -148,6 +148,7 @@ typedef struct {
 } Game;
 
 typedef struct {
+    bool fullscreen;
     f32 sfxVolume;
     f32 bgmVolume;
     f32 shakeness;
