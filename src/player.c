@@ -12,6 +12,7 @@
 #include "bullet.h"
 #include "include/logger.h"
 #include "include/timer.h"
+#include "utils.h"
 
 #include "./player.h"
 
@@ -44,7 +45,6 @@ void PlayerDraw(void)
     }
 
     if (TimerCompleted(&g.player.hitShaderDelay)) {
-        __LOG("Shader");
         BeginShaderMode(a.hitShader);
         DrawTexturePro(a.spriteAtlas, PLAYER_SPRITE, dst, origin, g.player.rotation, WHITE);
         EndShaderMode();
@@ -59,6 +59,7 @@ void PlayerUpdate(void)
     float delta = GetFrameTime();
 
     if (TimerCompleted(&g.player.hitShaderDelay)) {
+        c.shakeness += c.shaking;
         TimerReset(&g.player.hitShaderDelay);
         g.player.hitShaderDelay.remaining = 0;
         g.player.hitShaderDelay.paused = true;

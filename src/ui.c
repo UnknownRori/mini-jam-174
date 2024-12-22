@@ -184,9 +184,12 @@ void MainMenuSelectUpdate(void)
 
 void ResourceDraw(void)
 {
+    float offset = 0;
+
+    if (TimerCompleted(&g.player.hitShaderDelay)) offset = GetRandomValue(2, 4);
     Rectangle dst = (Rectangle) {
-        .x = 18,
-        .y = 24,
+        .x = 18 + offset,
+        .y = 24 + offset,
         .width = SCRAP_SPRITE.width + 12,
         .height = SCRAP_SPRITE.height + 12,
     };
@@ -194,7 +197,16 @@ void ResourceDraw(void)
         .x = SCRAP_SPRITE.width / 2.,
         .y = SCRAP_SPRITE.width / 2.,
     };
-    DrawTexturePro(a.spriteAtlas, SCRAP_SPRITE, dst, origin, 0, WHITE);
+    if (TimerCompleted(&g.player.hitShaderDelay))
+    {
+        BeginShaderMode(a.hitShader);
+        DrawTexturePro(a.spriteAtlas, SCRAP_SPRITE, dst, origin, 0, WHITE);
+        EndShaderMode();
+    }
+    else 
+    {
+        DrawTexturePro(a.spriteAtlas, SCRAP_SPRITE, dst, origin, 0, WHITE);
+    }
 
     dst = (Rectangle) {
         .x = 18,

@@ -21,6 +21,7 @@
 #include "include/logger.h"
 #include "include/timer.h"
 #include "scene.h"
+#include "utils.h"
 
 
 Game g = {0};
@@ -176,6 +177,7 @@ void GameReset()
     g.scene = SCENE_GAME;
     g.level = 1;
     g.elapsed = 0;
+    c.shakeness = 0.,
     g.multiplier_scrap = 1;
 
     g.paralax[0] = (Paralax) {
@@ -253,6 +255,7 @@ void GameSceneUpdate()
         GenerateAsteroid();
         AsteroidCollision();
         CameraFollowPlayer();
+        CameraShake(&g.camera, &c.shakeness, c.recover);
     } else if (g.paused && g.event == EVENT_NORMAL) {
         PauseSelectUpdate();
     } else if (g.paused && g.event == EVENT_LEVEL_UP) {
@@ -300,6 +303,9 @@ void GameInit(void)
     a.hitShader = LoadShader(0, "resources/hit.fs");
     c.bgmVolume = 0.8;
     c.sfxVolume = 0.6;
+    c.shakeness = 0.,
+    c.recover = 0.5,
+    c.shaking = 1.;
     GameReset();
 
     SceneInit(InitTimer(0.4, false));

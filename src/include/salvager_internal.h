@@ -149,6 +149,9 @@ typedef struct {
 typedef struct {
     f32 sfxVolume;
     f32 bgmVolume;
+    f32 shakeness;
+    f32 recover;
+    f32 shaking;
 } Config;
 
 #define PLAYER_SPRITE ((Rectangle) {0., 0., 32., 32.})
