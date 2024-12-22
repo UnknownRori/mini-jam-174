@@ -24,10 +24,11 @@
 
 
 Game g = {0};
-Assets a = {};
+Assets a = {0};
 Config c = {0};
 
 bool gameShouldQuit = false;
+
 
 void Quit(void)
 {
@@ -292,6 +293,7 @@ void GameInit(void)
     c.sfxVolume = 0.6;
     GameReset();
 
+    SceneInit(InitTimer(0.4, false));
     SceneAdd(SCENE_MAIN_MENU, (Scene) {
         .init = MainMenuInit,
         .draw = MainMenuDraw,
@@ -307,7 +309,7 @@ void GameInit(void)
         .draw = GameSceneDraw,
         .update = GameSceneUpdate,
     });
-    SceneChange(SCENE_MAIN_MENU);
+    SceneSwap(SCENE_MAIN_MENU);
 }
 void GameUnload(void)
 {

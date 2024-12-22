@@ -1,4 +1,5 @@
 #pragma once
+#include "include/timer.h"
 #ifndef SCENE_H
 #define SCENE_H
 
@@ -13,7 +14,9 @@ typedef struct
     SceneFunction update;
 } Scene;
 
+void SceneInit(Timer timeChange);
 void SceneChange(int index);
+void SceneSwap(int index);
 void SceneAdd(int, Scene);
 void SceneUpdate(void);
 void SceneDraw(void);

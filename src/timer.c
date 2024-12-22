@@ -39,3 +39,8 @@ bool IsTimerDone(const Timer *time)
 {
     return time->lifetime > 0.;
 }
+
+f32 TimeProgress(const Timer *time)
+{
+    return (time->remaining / time->lifetime);
+}

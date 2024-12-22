@@ -2,6 +2,7 @@
 #ifndef TIMER_H
 #define TIMER_H
 
+#include <stdbool.h>
 #include "./types.h"
 
 typedef struct {
@@ -16,6 +17,7 @@ typedef struct {
 void TimerReset(Timer *time);
 void TimerUpdate(Timer *time);
 bool TimerCompleted(const Timer *time);
+f32 TimeProgress(const Timer *time);
 Timer InitTimer(float lifetime, bool repeating);
 bool IsTimerDone(const Timer *time);
 
