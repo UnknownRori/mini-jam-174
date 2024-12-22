@@ -83,14 +83,29 @@ jobs:
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         -S ${{ github.workspace }}
+    
+    - name: Run Custom Makefile
+      if: ${{ matrix.os == 'windows-latest' }}
+      working-directory: ${{ github.workspace }}
+      run: |
+        C:\tools\msys64\mingw64\bin\make
 
     - name: Build
       # Build your program with the given configuration. Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
       working-directory: ${{ github.workspace }}
+      if: ${{ matrix.os == 'ubuntu-latest' }}
       run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
 
     - name: Upload Build Artifact
       # Upload the build output as an artifact
+      if: ${{ matrix.os == 'windows-latest' }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-${{ matrix.os }}-${{ matrix.build_type }}
+        path: ./build
+    - name: Upload Build Artifact
+      # Upload the build output as an artifact
+      if: ${{ matrix.os == 'ubuntu-latest' }}
       uses: actions/upload-artifact@v3
       with:
         name: build-${{ matrix.os }}-${{ matrix.build_type }}
