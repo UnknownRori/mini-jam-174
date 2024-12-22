@@ -108,7 +108,7 @@ void PauseSelectUpdate(void)
 {
     if (IsKeyPressed(KEY_UP)) selectPauseMenu-= 1;
     if (IsKeyPressed(KEY_DOWN)) selectPauseMenu+= 1;
-    if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_Z)) {
+    if (IsKeyPressed(KEY_ENTER) || IsKeyReleased(KEY_Z)) {
         switch (selectPauseMenu) {
             case 0:
                 g.paused = false;
@@ -125,7 +125,7 @@ void LevelupSelectionUpdate(void)
 {
     if (IsKeyPressed(KEY_UP)) selectLevelup-= 1;
     if (IsKeyPressed(KEY_DOWN)) selectLevelup+= 1;
-    if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_Z)) LevelUpPlayer(selectLevelup);
+    if (IsKeyPressed(KEY_ENTER) || IsKeyReleased(KEY_Z)) LevelUpPlayer(selectLevelup);
     CLAMP(selectLevelup, 0, 2);
 }
 
@@ -163,7 +163,7 @@ void MainMenuSelectUpdate(void)
 {
     if (IsKeyPressed(KEY_UP)) selectMainMenu-= 1;
     if (IsKeyPressed(KEY_DOWN)) selectMainMenu+= 1;
-    if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_Z)) {
+    if (IsKeyPressed(KEY_ENTER) || IsKeyReleased(KEY_Z)) {
         switch(selectMainMenu) {
             case 0:
                 SceneChange(SCENE_GAME);
