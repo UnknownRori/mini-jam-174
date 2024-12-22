@@ -4,10 +4,14 @@ This is design docs for game about small salvager on deep space.
 
 ## Planned Feature
 
+Since this is made with no game engine all the planned feature either gameplay
+or just straight up foundation for the game.
+
 - Roguelite system (Exp based on collected scrap)
 - Power up / Upgrade for every level up
-- Main Menu
+- Main Menu (Scene)
 - Physic
+- Particle System
 - Bloom
 - Dust cloud / Nebula for environment
 - Minimap
