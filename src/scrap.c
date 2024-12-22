@@ -74,11 +74,19 @@ void ScrapPickup(void)
         .x = PLAYER_SPRITE.width,
         .y = PLAYER_SPRITE.height,
     };
-    Vector2 playerPos = Vector2Subtract(g.player.position, Vector2Scale(playerSize, 0.5));
     for (u32 i = 0; i < SCRAP_LIMIT; i++)
     {
         if (g.scrap[i].active) {
-            if (CheckCollisionPointCircle(g.scrap[i].position, playerPos, g.player.collectionRadius)) {
+            Vector2 centerPlayer = Vector2Subtract(g.player.position, (Vector2) {
+                .x = PLAYER_SPRITE.width / 2.,
+                .y = PLAYER_SPRITE.height / 2.,
+            });
+
+            Vector2 centerScrap = Vector2Subtract(g.scrap[i].position, (Vector2) {
+                .x = ASTEROID_SPRITE1.width / 2.,
+                .y = ASTEROID_SPRITE1.height / 2.,
+            });
+            if (CheckCollisionPointCircle(centerScrap, centerPlayer, g.player.collectionRadius)) {
                 __LOG("Scrap Collected %.0f", g.scrap[i].value);
                 g.scrap_collected += g.scrap[i].value * g.multiplier_scrap;
                 PlaySound(a.pickUp);

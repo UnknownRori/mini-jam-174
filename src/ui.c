@@ -110,6 +110,7 @@ void PauseSelectUpdate(void)
     if (IsKeyPressed(KEY_UP)) selectPauseMenu-= 1;
     if (IsKeyPressed(KEY_DOWN)) selectPauseMenu+= 1;
     if (IsKeyPressed(KEY_ENTER) || IsKeyReleased(KEY_Z) || IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_DOWN)) PlaySound(a.select);
+    if (IsKeyPressed(KEY_X)) g.paused = false;
     if (IsKeyPressed(KEY_ENTER) || IsKeyReleased(KEY_Z)) {
         switch (selectPauseMenu) {
             case 0:

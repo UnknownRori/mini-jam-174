@@ -136,7 +136,7 @@ void GameOptionUpdate(void)
     };
     UpdateMusicStream(a.bgm);
     CameraShake(&g.camera, &c.shakeness, c.recover);
-    if (IsKeyPressed(KEY_ESCAPE)) SceneChange(SCENE_MAIN_MENU);
+    if (IsKeyPressed(KEY_ESCAPE) || IsKeyPressed(KEY_X)) SceneChange(SCENE_MAIN_MENU);
 
     OptionSliderMenuUpdate();
 }
@@ -182,8 +182,8 @@ void GameReset()
     memset(g.scrap, 0, sizeof(Scrap) * SCRAP_LIMIT);
     memset(g.asteroid, 0, sizeof(Asteroid) * ASTEROID_LIMIT);
 
-    CreateNewScrap((Vector2) {50, 50}, 20.);
-    CreateNewAsteroid((Vector2) {-80, 80}, (MovementParams) {{0, 0}, 5}, 4);
+    CreateNewScrap((Vector2) {10050, 10050}, 20.);
+    CreateNewAsteroid((Vector2) {10000, 10150}, (MovementParams) {{0, 0}, 5}, 4);
     /*CreateNewAsteroid((Vector2) {-50, 20}, (MovementParams) {{-10, 5}, 5}, 4);*/
     /*CreateNewAsteroid((Vector2) {-20, 40}, (MovementParams) {{10, -5}, 5}, 4);*/
     /*CreateNewAsteroid((Vector2) {-24, 20}, (MovementParams) {{-10, -5}, 5}, 4);*/
@@ -209,7 +209,7 @@ void GameReset()
         .rotation = 0,
         .zoom = 1.25,
         .offset = (Vector2){SCREEN_WIDTH / 2., SCREEN_HEIGHT / 2.},
-        .target = (Vector2){0, 0},
+        .target = (Vector2){10000, 10000},
     };
     Timer hitTimer = InitTimer(0.4, true);
     hitTimer.remaining = 0;
@@ -219,7 +219,7 @@ void GameReset()
         .rotationSpeed = 250,
         .friction = .95,
         .maxSpeed = 350,
-        .position = VECTOR2_ZERO,
+        .position = {10000,10000},
         .acceleration = 200,
         .collisionRadius = 16.,
 
