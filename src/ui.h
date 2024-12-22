@@ -9,7 +9,12 @@
 
 void ResourceDraw(void);
 void ProgressDraw(Rectangle size, f32 current, f32 max, Color active, Color deactive);
+
 void LevelupSelectionDraw(void);
 void LevelupSelectionUpdate(void);
+
+void PauseSelectUpdate(void);
+
+void PauseSelectDraw(void);
 
 #endif

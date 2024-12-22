@@ -20,11 +20,14 @@
 #include "event.h"
 #include "include/logger.h"
 #include "include/timer.h"
+#include "scene.h"
 
 
 Game g = {0};
 Assets a = {};
 Config c = {0};
+
+
 
 void UIGameDraw(void)
 {
@@ -38,73 +41,8 @@ void CameraFollowPlayer(void)
     g.camera.target = g.player.position;
 }
 
-
-void GameLoop(void)
+void GameReset()
 {
-    UpdateMusicStream(a.bgm);
-    if (g.event == EVENT_NORMAL) {
-        if (IsKeyPressed(KEY_ESCAPE)) g.paused = !g.paused;
-    }
-
-    EventUpdate();
-
-    if (!g.paused)
-    {
-        PlayerUpdate();
-        ScrapUpdate();
-        ScrapPickup();
-        AsteroidUpdate();
-        BulletPlayerUpdate();
-        BulletPlayerCollisionWithAsteroid();
-        GenerateAsteroid();
-        CameraFollowPlayer();
-    }
-
-    if (g.event == EVENT_LEVEL_UP)
-    {
-        LevelupSelectionUpdate();
-    }
-
-    BeginDrawing();
-        ClearBackground(BLACK);
-
-        ParalaxDraw();
-        BeginMode2D(g.camera);
-            ScrapDraw();
-            AsteroidDraw();
-            BulletPlayerDraw();
-            PlayerDraw();
-        EndMode2D();
-
-        if (g.paused)
-        {
-            DrawRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, (Color) {32, 32, 32, 128});
-        }
-
-        if (g.event == EVENT_LEVEL_UP)
-        {
-            LevelupSelectionDraw();
-        }
-
-        UIGameDraw();
-        DrawFPS(0, SCREEN_HEIGHT - 24);
-    EndDrawing();
-}
-
-void GameInit(void)
-{
-    memset(&g, 0, sizeof(Game));
-
-    SetExitKey(KEY_F1);
-
-    a.spriteAtlas = LoadTexture("resources/atlas.png");
-    a.bg = LoadTexture("resources/bg.png");
-    a.font = LoadFont("resources/PressStart2P-Regular.ttf");
-    a.playerShot = LoadSound("resources/playershot.wav");
-    a.pickUp = LoadSound("resources/pickup.wav");
-    a.hit = LoadSound("resources/hit.wav");
-    a.explosiveAsteroid = LoadSound("resources/explosive-asteroid.wav");
-    a.bgm = LoadMusicStream("resources/mini-jam-bgm.ogg");
     PlayMusicStream(a.bgm);
     SetMusicVolume(a.bgm, 1.);
     SetGenerateAsteroidInterval(InitTimer(0.8, true));
@@ -147,6 +85,97 @@ void GameInit(void)
         .collectionRadius = 32,
         .shotCooldown = InitTimer(DEFAULT_COOLDOWN_PLAYER_SHOT, true),
     };
+}
+
+void GameSceneDraw()
+{
+    ParalaxDraw();
+    BeginMode2D(g.camera);
+        ScrapDraw();
+        AsteroidDraw();
+        BulletPlayerDraw();
+        PlayerDraw();
+    EndMode2D();
+
+    if (g.paused && g.event == EVENT_NORMAL)
+    {
+        DrawRectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, (Color) {32, 32, 32, 128});
+        PauseSelectDraw();
+    } else if (g.paused && g.event == EVENT_LEVEL_UP)
+    {
+        LevelupSelectionDraw();
+    }
+
+    UIGameDraw();
+    DrawFPS(0, SCREEN_HEIGHT - 24);
+}
+
+void GameSceneUpdate()
+{
+    UpdateMusicStream(a.bgm);
+
+    if (g.event == EVENT_NORMAL) {
+        if (IsKeyPressed(KEY_ESCAPE)) g.paused = !g.paused;
+    }
+
+    EventUpdate();
+
+    if (!g.paused)
+    {
+        PlayerUpdate();
+        ScrapUpdate();
+        ScrapPickup();
+        AsteroidUpdate();
+        BulletPlayerUpdate();
+        BulletPlayerCollisionWithAsteroid();
+        GenerateAsteroid();
+        CameraFollowPlayer();
+    } else if (g.paused && g.event == EVENT_NORMAL) {
+        PauseSelectUpdate();
+    } else if (g.paused && g.event == EVENT_LEVEL_UP) {
+        LevelupSelectionUpdate();
+    }
+
+}
+
+void GameSceneInit()
+{
+    GameReset();
+}
+
+
+void GameLoop(void)
+{
+    SceneUpdate();
+    BeginDrawing();
+        ClearBackground(BLACK);
+
+        SceneDraw();
+    EndDrawing();
+}
+
+void GameInit(void)
+{
+    memset(&g, 0, sizeof(Game));
+
+    SetExitKey(KEY_F1);
+
+    a.spriteAtlas = LoadTexture("resources/atlas.png");
+    a.bg = LoadTexture("resources/bg.png");
+    a.font = LoadFont("resources/PressStart2P-Regular.ttf");
+    a.playerShot = LoadSound("resources/playershot.wav");
+    a.pickUp = LoadSound("resources/pickup.wav");
+    a.hit = LoadSound("resources/hit.wav");
+    a.explosiveAsteroid = LoadSound("resources/explosive-asteroid.wav");
+    a.bgm = LoadMusicStream("resources/mini-jam-bgm.ogg");
+    GameReset();
+
+    SceneAdd(SCENE_GAME, (Scene) {
+        .init = GameSceneInit,
+        .draw = GameSceneDraw,
+        .update = GameSceneUpdate,
+    });
+    SceneChange(SCENE_GAME);
 }
 void GameUnload(void)
 {
