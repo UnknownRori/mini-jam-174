@@ -168,6 +168,7 @@ typedef struct {
     Sound explosiveAsteroid;
     Sound pickUp;
     Sound select;
+    Sound collideAsteroid;
 
     Music bgm;
 } Assets;

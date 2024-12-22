@@ -154,6 +154,7 @@ void GameReset()
     SetSoundVolume(a.pickUp, c.sfxVolume);
     SetSoundVolume(a.playerShot, c.sfxVolume);
     SetSoundVolume(a.select, c.sfxVolume);
+    SetSoundVolume(a.collideAsteroid, c.sfxVolume);
     SetGenerateAsteroidInterval(InitTimer(0.8, true));
     srand(time(NULL));
 
@@ -288,6 +289,7 @@ void GameInit(void)
     a.hit = LoadSound("resources/hit.wav");
     a.explosiveAsteroid = LoadSound("resources/explosive-asteroid.wav");
     a.select = LoadSound("resources/select.wav");
+    a.collideAsteroid = LoadSound("resources/collide-asteroid.wav");
     a.bgm = LoadMusicStream("resources/mini-jam-bgm.ogg");
     c.bgmVolume = 0.8;
     c.sfxVolume = 0.6;

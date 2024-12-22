@@ -215,6 +215,7 @@ void  AsteroidCollision(void)
             g.player.position = player.position;
             if (TimerCompleted(&g.asteroid[i].playerHitTimer)) {
                 g.scrap_collected -= 0.5;
+                PlaySound(a.collideAsteroid);
             }
         }
     }
