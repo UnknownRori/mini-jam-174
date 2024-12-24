@@ -176,7 +176,7 @@ void GameReset()
     SetSoundVolume(a.select, c.sfxVolume);
     SetSoundVolume(a.collideAsteroid, c.sfxVolume);
     SetSoundVolume(a.engineLoop, c.sfxVolume);
-    SetGenerateAsteroidInterval(InitTimer(0.8, true));
+    SetGenerateAsteroidInterval(InitTimer(ASTEROID_SPAWN_LIFETIME, true));
     srand(time(NULL));
 
     memset(g.scrap, 0, sizeof(Scrap) * SCRAP_LIMIT);
