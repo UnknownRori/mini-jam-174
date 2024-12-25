@@ -90,6 +90,7 @@ void PlayerUpdate(void)
     g.player.position = Vector2Add(Vector2Scale(g.player.velocity, delta), g.player.position);
 
     TimerUpdate(&g.player.shotCooldown);
+        g.player.shotCooldown.paused = false;
     if (!TimerCompleted(&g.player.shotCooldown)) return;
 
     if (IsKeyDown(KEY_Z) &&  0 <= (g.scrap_collected - g.scrap_spent)) 
@@ -108,5 +109,8 @@ void PlayerUpdate(void)
             g.player.damage
         );
         PlaySound(a.playerShot);
+    } else {
+        g.player.shotCooldown.remaining = 0;
+        g.player.shotCooldown.paused = true;
     }
 }
