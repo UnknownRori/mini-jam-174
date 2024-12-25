@@ -217,7 +217,7 @@ void GameReset()
     g.player = (Player) {
         .rotation = 0,
         .rotationSpeed = 250,
-        .friction = .95,
+        .friction = PLAYER_FRICTION,
         .maxSpeed = 350,
         .position = {10000,10000},
         .acceleration = 200,
