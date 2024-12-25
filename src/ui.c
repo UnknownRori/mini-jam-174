@@ -188,6 +188,7 @@ void MainMenuSelectUpdate(void)
 void ResourceDraw(void)
 {
     float offset = 0;
+    char buffer[512] ={0};
 
     if (TimerCompleted(&g.player.hitShaderDelay)) offset = GetRandomValue(2, 4);
     Rectangle dst = (Rectangle) {
@@ -200,15 +201,20 @@ void ResourceDraw(void)
         .x = SCRAP_SPRITE.width / 2.,
         .y = SCRAP_SPRITE.width / 2.,
     };
+
+    snprintf(buffer, sizeof(buffer), "%.0lf", g.scrap_collected - g.scrap_spent);
+
     if (TimerCompleted(&g.player.hitShaderDelay))
     {
         BeginShaderMode(a.hitShader);
         DrawTexturePro(a.spriteAtlas, SCRAP_SPRITE, dst, origin, 0, WHITE);
         EndShaderMode();
+        DrawTextEx(a.font, buffer, (Vector2) {SCRAP_SPRITE.width + 24, SCRAP_SPRITE.height / 2. + 12}, 24, 4, RED);
     }
     else 
     {
         DrawTexturePro(a.spriteAtlas, SCRAP_SPRITE, dst, origin, 0, WHITE);
+        DrawTextEx(a.font, buffer, (Vector2) {SCRAP_SPRITE.width + 24, SCRAP_SPRITE.height / 2. + 12}, 24, 4, WHITE);
     }
 
     dst = (Rectangle) {
@@ -223,10 +229,6 @@ void ResourceDraw(void)
     };
     DrawTexturePro(a.spriteAtlas, TIME_SPRITE, dst, origin, 0, WHITE);
 
-    char buffer[512] ={0};
-    snprintf(buffer, sizeof(buffer), "%.0lf", g.scrap_collected - g.scrap_spent);
-
-    DrawTextEx(a.font, buffer, (Vector2) {SCRAP_SPRITE.width + 24, SCRAP_SPRITE.height / 2. + 12}, 24, 4, WHITE);
 
     Time time = CalculateTime(g.elapsed);
     snprintf(buffer, sizeof(buffer), "%02d:%02d", time.minute, time.seconds);
