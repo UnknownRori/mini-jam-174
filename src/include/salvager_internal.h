@@ -149,6 +149,7 @@ typedef struct {
 
     bool paused;
     bool gameOver;
+    bool playerCurrentlyShoot;
     GameScene scene;
     GameEvent event;
 } Game;

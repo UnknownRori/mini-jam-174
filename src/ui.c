@@ -126,6 +126,8 @@ void PauseSelectUpdate(void)
 
 void LevelupSelectionUpdate(void)
 {
+    if (g.playerCurrentlyShoot && IsKeyReleased(KEY_Z)) {g.playerCurrentlyShoot = false; return;}
+    if (g.playerCurrentlyShoot) return;
     if (IsKeyPressed(KEY_UP)) selectLevelup-= 1;
     if (IsKeyPressed(KEY_DOWN)) selectLevelup+= 1;
     if (IsKeyPressed(KEY_ENTER) || IsKeyReleased(KEY_Z)) LevelUpPlayer(selectLevelup);

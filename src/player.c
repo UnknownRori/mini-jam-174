@@ -96,6 +96,7 @@ void PlayerUpdate(void)
     if (IsKeyDown(KEY_Z) &&  0 <= (g.scrap_collected - g.scrap_spent)) 
     {
         TimerReset(&g.player.shotCooldown);
+        g.playerCurrentlyShoot = true;
         f32 radian = (g.player.rotation - 90) * DEG2RAD;
         Vector2 forward = {cosf(radian), sinf(radian)};
         forward = Vector2Scale(forward, BULLET_VELOCITY);
@@ -112,5 +113,6 @@ void PlayerUpdate(void)
     } else {
         g.player.shotCooldown.remaining = 0;
         g.player.shotCooldown.paused = true;
+        g.playerCurrentlyShoot = false;
     }
 }
